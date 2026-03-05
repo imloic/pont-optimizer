@@ -1164,7 +1164,50 @@ footer a:hover { text-decoration: underline; }
       <a class="social-btn" onclick="shareWhatsapp()" title="Partager sur WhatsApp"><span class="ico">[w]</span> WHATSAPP</a>
       <a class="social-btn" onclick="shareSite()" title="Copier le lien"><span class="ico">[&lt;&gt;]</span> COPIER</a>
     </div>
+    <p style="margin-top:16px"><a href="#" onclick="document.getElementById('modalLegal').style.display='flex';return false;" style="font-size:12px;color:var(--text-dim)">Mentions l&eacute;gales</a></p>
   </footer>
+
+  <!-- MENTIONS LEGALES MODAL -->
+  <div id="modalLegal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;padding:20px" onclick="if(event.target===this)this.style.display='none'">
+    <div style="background:var(--bg-panel);border:1px solid var(--border-light);max-width:700px;width:100%;max-height:85vh;overflow-y:auto;padding:32px;position:relative;font-family:'VT323',monospace;color:var(--text-dim);font-size:18px;line-height:1.5">
+      <button onclick="document.getElementById('modalLegal').style.display='none'" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--neon-pink);font-family:'Press Start 2P',monospace;font-size:14px;cursor:pointer">[X]</button>
+      <h2 style="font-family:'Press Start 2P',monospace;font-size:14px;color:var(--neon-green);margin-bottom:20px">MENTIONS L&Eacute;GALES</h2>
+
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin:20px 0 8px">&Eacute;diteur du site</h3>
+      <p>Pont Optimizer 3000 est un outil gratuit et ind&eacute;pendant d'optimisation de RTT et jours de cong&eacute;s autour des jours f&eacute;ri&eacute;s fran&ccedil;ais.</p>
+      <p style="margin-top:8px">Site : <span style="color:var(--neon-green)">rtt.cool</span><br>
+      &Eacute;diteur : Lo&iuml;c Guillout<br>
+      Contact : <span style="color:var(--neon-cyan)">contact@rtt.cool</span></p>
+
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin:20px 0 8px">H&eacute;bergement</h3>
+      <p>Hostinger (UAB Hostinger)<br>
+      Jonavos g. 60C, 44192 Kaunas, Lituanie<br>
+      <span style="color:var(--neon-cyan)">www.hostinger.fr</span></p>
+
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin:20px 0 8px">Propri&eacute;t&eacute; intellectuelle</h3>
+      <p>Les donn&eacute;es de jours f&eacute;ri&eacute;s sont issues du calendrier officiel fran&ccedil;ais (sources publiques). Les dates de vacances scolaires proviennent du Minist&egrave;re de l'&Eacute;ducation nationale.</p>
+      <p style="margin-top:8px">Le code source, les algorithmes d'optimisation et le design du site sont la propri&eacute;t&eacute; exclusive de Lo&iuml;c Guillout. Toute reproduction, m&ecirc;me partielle, est interdite sans autorisation &eacute;crite pr&eacute;alable.</p>
+
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin:20px 0 8px">Donn&eacute;es personnelles</h3>
+      <p>Pont Optimizer 3000 ne collecte <strong style="color:var(--neon-green)">aucune donn&eacute;e personnelle</strong>. Aucun compte utilisateur, aucune inscription, aucun cookie publicitaire.</p>
+      <p style="margin-top:8px">Tous les calculs sont effectu&eacute;s localement dans votre navigateur. Vos choix de RTT ne sont jamais envoy&eacute;s &agrave; un serveur. L'&eacute;tat de l'application est stock&eacute; uniquement dans l'URL de votre navigateur.</p>
+      <p style="margin-top:8px">Des statistiques de fr&eacute;quentation anonymes sont collect&eacute;es via Matomo (h&eacute;berg&eacute; en propre) dans le respect du RGPD, sans cookies de suivi.</p>
+
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin:20px 0 8px">Limitation de responsabilit&eacute;</h3>
+      <p>Pont Optimizer 3000 s'efforce de fournir des informations exactes sur les jours f&eacute;ri&eacute;s et vacances scolaires, mais ne peut garantir l'exactitude, l'exhaustivit&eacute; ou l'actualit&eacute; des donn&eacute;es.</p>
+      <p style="margin-top:8px">L'outil fournit des suggestions d'optimisation &agrave; titre informatif. La d&eacute;cision de poser des jours de cong&eacute;s reste de la seule responsabilit&eacute; de l'utilisateur. Pont Optimizer 3000 d&eacute;cline toute responsabilit&eacute; en cas de :</p>
+      <ul style="margin:8px 0 0 20px;list-style:none">
+        <li style="margin-bottom:4px">&gt; Erreurs dans les dates de jours f&eacute;ri&eacute;s ou vacances scolaires</li>
+        <li style="margin-bottom:4px">&gt; Indisponibilit&eacute; temporaire du service</li>
+        <li style="margin-bottom:4px">&gt; Dommages directs ou indirects li&eacute;s &agrave; l'utilisation du site</li>
+      </ul>
+
+      <h3 style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin:20px 0 8px">Contact</h3>
+      <p>Pour toute question : <span style="color:var(--neon-cyan)">contact@rtt.cool</span></p>
+
+      <p style="margin-top:20px;font-size:14px;color:var(--text-dim);opacity:0.6">Derni&egrave;re mise &agrave; jour : 5 mars 2026</p>
+    </div>
+  </div>
 
 </main>
 
