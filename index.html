@@ -1,0 +1,2557 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pont Optimizer 3000 — Optimiser ses RTT et ponts 2025-2036</title>
+<meta name="description" content="Calculez les meilleurs ponts et jours fériés pour poser vos RTT. 4 stratégies d'optimisation, mode équipe, export iCal. Gratuit, sans inscription, 100% français.">
+<link rel="canonical" href="https://rtt.cool">
+<meta property="og:title" content="PONT OPTIMIZER 3000">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://rtt.cool">
+<meta property="og:description" content="Maximisez vos jours off avec le minimum de RTT">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PONT OPTIMIZER 3000">
+<meta name="twitter:description" content="Maximisez vos jours off avec le minimum de RTT">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏖️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" media="print" onload="this.media='all'">
+<meta name="keywords" content="RTT, ponts, jours fériés, optimisation, congés, France, calculateur, 2025, 2026, 2027">
+<meta name="robots" content="index, follow">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Pont Optimizer 3000",
+  "url": "https://rtt.cool",
+  "description": "Optimiseur de RTT et ponts pour maximiser vos jours off autour des jours fériés français.",
+  "applicationCategory": "UtilityApplication",
+  "operatingSystem": "All",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "EUR" },
+  "inLanguage": "fr",
+  "browserRequirements": "Requires JavaScript",
+  "featureList": ["Optimisation RTT", "4 stratégies automatiques", "Mode équipe", "Export iCal", "Comparaison collègue", "Vacances scolaires zones A/B/C"]
+}
+</script>
+<style>
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --neon-green: #39ff14;
+  --neon-pink: #ff6ec7;
+  --neon-cyan: #00fff7;
+  --neon-yellow: #fff700;
+  --neon-orange: #ff9500;
+  --neon-red: #ff3131;
+  --bg-dark: #0a0a1a;
+  --bg-panel: #12122a;
+  --bg-input: #1a1a3a;
+  --border-light: #3a3a6a;
+  --border-highlight: #5a5a9a;
+  --text-dim: #9999bb;
+  --text-main: #ccccee;
+  --bevel-light: #6a6a9a;
+  --bevel-dark: #08081a;
+  --ferie: #ff4444;
+  --rtt: #39ff14;
+  --weekend: #3a3a6a;
+  --pont-block: rgba(57, 255, 20, 0.12);
+  --vacances: rgba(255, 149, 0, 0.15);
+  --vacances-border: rgba(255, 149, 0, 0.4);
+}
+
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  line-height: 1.4;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* === SCANLINES OVERLAY === */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.08) 2px,
+    rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* === STARS BACKGROUND === */
+.stars {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle var(--dur) ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: 0.2; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.5); }
+}
+
+/* === BEVEL MIXIN === */
+.bevel {
+  border: 2px solid;
+  border-color: var(--bevel-light) var(--bevel-dark) var(--bevel-dark) var(--bevel-light);
+  background: var(--bg-panel);
+}
+.bevel-inset {
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  background: var(--bg-input);
+}
+
+/* === LAYOUT === */
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* === HEADER === */
+header {
+  text-align: center;
+  padding: 32px 0 24px;
+}
+h1.logo, .logo {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(20px, 4vw, 36px);
+  font-weight: normal;
+  line-height: 1.4;
+  color: var(--neon-cyan);
+  text-shadow:
+    0 0 10px var(--neon-cyan),
+    0 0 30px var(--neon-cyan),
+    0 0 60px rgba(0,255,247,0.3);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.logo .v {
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 10px var(--neon-pink),
+    0 0 30px var(--neon-pink);
+  font-size: 0.6em;
+  vertical-align: super;
+}
+.tagline {
+  color: var(--neon-yellow);
+  font-size: 22px;
+  text-shadow: 0 0 8px rgba(255,247,0,0.4);
+}
+.marquee-wrap {
+  overflow: hidden;
+  margin-top: 12px;
+  padding: 6px 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+.marquee {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 60s linear infinite;
+  color: var(--neon-green);
+  font-size: 16px;
+}
+@keyframes marquee {
+  from { transform: translateX(100vw); }
+  to { transform: translateX(-100%); }
+}
+
+/* === COUNTDOWN === */
+.countdown-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+  margin: 16px 0;
+  text-align: center;
+  flex-wrap: wrap;
+}
+.countdown-bar .label {
+  color: var(--neon-pink);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+.countdown-bar .name {
+  color: var(--neon-cyan);
+  font-size: 24px;
+  text-shadow: 0 0 8px rgba(0,255,247,0.3);
+}
+.countdown-digits {
+  display: flex;
+  gap: 8px;
+}
+.countdown-digits .digit-box {
+  padding: 8px 12px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 20px;
+  color: var(--neon-yellow);
+  text-shadow: 0 0 10px rgba(255,247,0,0.5);
+  text-align: center;
+  min-width: 60px;
+}
+.countdown-digits .digit-box small {
+  display: block;
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* === CONTROLS === */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.control-group label {
+  display: block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  color: var(--neon-cyan);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+.control-group select,
+.control-group input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  font-family: 'VT323', monospace;
+  font-size: 20px;
+  color: var(--neon-green);
+  background: var(--bg-input);
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  outline: none;
+  cursor: pointer;
+}
+.control-group select:focus,
+.control-group input:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px rgba(0,255,247,0.3);
+}
+.control-group select option {
+  background: var(--bg-dark);
+  color: var(--text-main);
+}
+
+/* === STRATEGIES === */
+.strategies {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+}
+.strat-btn {
+  padding: 12px 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 9px;
+  text-align: center;
+  cursor: pointer;
+  border: 2px solid;
+  border-color: var(--bevel-light) var(--bevel-dark) var(--bevel-dark) var(--bevel-light);
+  background: var(--bg-panel);
+  color: var(--text-dim);
+  transition: all 0.15s;
+  line-height: 1.6;
+}
+.strat-btn:hover {
+  color: var(--text-main);
+  background: var(--bg-input);
+}
+.strat-btn.active {
+  border-color: var(--neon-green);
+  color: var(--neon-green);
+  background: rgba(57,255,20,0.08);
+  box-shadow: 0 0 12px rgba(57,255,20,0.2);
+}
+.strat-btn .icon { font-size: 18px; display: block; margin-bottom: 2px; font-family: 'Press Start 2P', monospace; color: var(--neon-yellow); line-height: 1; }
+.strat-btn .strat-name { display: block; }
+.strat-btn .desc { font-family: 'VT323', monospace; font-size: 18px; color: var(--text-dim); margin-top: 6px; display: block; }
+
+/* === SCORE === */
+.score-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 16px;
+  margin: 0 16px 16px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.score-item .value {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(16px, 3vw, 28px);
+  color: var(--neon-green);
+  text-shadow: 0 0 15px rgba(57,255,20,0.5);
+}
+.score-item .value.ratio { color: var(--neon-yellow); text-shadow: 0 0 15px rgba(255,247,0,0.5); }
+.score-item .label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+/* === ACTIONS === */
+.actions {
+  display: flex;
+  gap: 8px;
+  padding: 0 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 10px 20px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  border: 2px solid;
+  border-color: var(--bevel-light) var(--bevel-dark) var(--bevel-dark) var(--bevel-light);
+  background: var(--bg-panel);
+  color: var(--text-main);
+  transition: all 0.15s;
+}
+.btn:hover { background: var(--bg-input); }
+.btn:active {
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  transform: translate(1px, 1px);
+}
+.btn-primary {
+  background: linear-gradient(180deg, #2a5a1a, #1a3a10);
+  color: var(--neon-green);
+  border-color: var(--neon-green) #0a2a05 #0a2a05 var(--neon-green);
+}
+.btn-primary:hover { background: linear-gradient(180deg, #3a7a2a, #2a5a1a); box-shadow: 0 0 12px rgba(57,255,20,0.3); }
+.btn-export {
+  background: linear-gradient(180deg, #3a2a5a, #2a1a4a);
+  color: var(--neon-pink);
+  border-color: var(--neon-pink) #1a0a3a #1a0a3a var(--neon-pink);
+}
+.btn-share {
+  background: linear-gradient(180deg, #1a3a5a, #0a2a4a);
+  color: var(--neon-cyan);
+  border-color: var(--neon-cyan) #0a1a3a #0a1a3a var(--neon-cyan);
+}
+.btn-reset {
+  color: var(--neon-red);
+  border-color: #5a2a2a #2a0a0a #2a0a0a #5a2a2a;
+}
+
+/* === CALENDAR === */
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px;
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+.month-card {
+  padding: 8px;
+}
+.month-card .month-name {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 10px;
+  color: var(--neon-cyan);
+  text-align: center;
+  padding: 6px 0;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--border-light);
+}
+.month-card .day-headers {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  padding: 4px 0;
+}
+.month-card .days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+}
+.day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  position: relative;
+  border: 1px solid transparent;
+  transition: all 0.1s;
+  border-radius: 2px;
+}
+.day-cell:hover:not(.empty):not(.weekend):not(.ferie) {
+  border-color: var(--neon-green);
+  background: rgba(57,255,20,0.1);
+}
+.day-cell.empty { cursor: default; }
+.day-cell.weekend { color: var(--text-dim); cursor: default; background: rgba(255,255,255,0.02); }
+.day-cell.ferie {
+  color: var(--ferie);
+  font-weight: bold;
+  text-shadow: 0 0 6px rgba(255,68,68,0.5);
+  cursor: default;
+}
+.day-cell.ferie::after {
+  content: '';
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--neon-red);
+  border-radius: 50%;
+}
+.day-cell.rtt {
+  background: rgba(57,255,20,0.15);
+  color: var(--neon-green);
+  font-weight: bold;
+  border-color: rgba(57,255,20,0.3);
+  text-shadow: 0 0 6px rgba(57,255,20,0.5);
+}
+.day-cell.in-block {
+  background: var(--pont-block);
+}
+.day-cell.vacances {
+  background: var(--vacances);
+}
+.day-cell.vacances.rtt { background: rgba(57,255,20,0.15); }
+.day-cell.vacances.ferie { background: transparent; }
+.day-cell.today {
+  box-shadow: inset 0 0 0 2px var(--neon-yellow);
+}
+.day-cell[title] { cursor: help; }
+
+/* tooltip */
+.day-cell .tip {
+  display: none;
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  border: 1px solid var(--neon-cyan);
+  padding: 4px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  color: var(--neon-cyan);
+  pointer-events: none;
+}
+.day-cell:hover .tip { display: block; }
+
+/* === LEGEND === */
+.legend {
+  display: flex;
+  gap: 16px;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  font-size: 15px;
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+.legend-dot.l-ferie { background: var(--neon-red); }
+.legend-dot.l-rtt { background: var(--neon-green); }
+.legend-dot.l-weekend { background: var(--weekend); }
+.legend-dot.l-block { background: var(--pont-block); border: 1px solid rgba(57,255,20,0.3); }
+.legend-dot.l-today { box-shadow: inset 0 0 0 2px var(--neon-yellow); background: transparent; }
+.legend-dot.l-scolaire { background: var(--vacances); border: 1px solid var(--vacances-border); }
+
+/* === FUN FACTS === */
+.fun-facts {
+  padding: 16px;
+  margin: 0 16px 16px;
+}
+.fun-facts h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--neon-yellow);
+  margin-bottom: 12px;
+}
+.fact {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-left: 3px solid var(--neon-pink);
+  color: var(--text-main);
+  font-size: 17px;
+}
+.fact strong { color: var(--neon-cyan); }
+
+/* === MULTI-YEAR COMPARE === */
+.compare-section {
+  padding: 16px;
+  margin: 0 16px 16px;
+}
+.compare-section h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--neon-yellow);
+  margin-bottom: 12px;
+}
+.compare-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.compare-row .yr {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--neon-cyan);
+  min-width: 50px;
+}
+.compare-row .bar-bg {
+  flex: 1;
+  height: 16px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.compare-row .bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--neon-green), var(--neon-cyan));
+  border-radius: 2px;
+  transition: width 0.5s;
+}
+.compare-row .count {
+  font-size: 16px;
+  color: var(--neon-green);
+  min-width: 80px;
+  text-align: right;
+}
+.compare-row.best .yr { color: var(--neon-yellow); }
+.compare-row.best .bar-fill { background: linear-gradient(90deg, var(--neon-yellow), var(--neon-orange)); }
+.compare-row.best .count { color: var(--neon-yellow); font-weight: bold; }
+.compare-row.current { background: rgba(0,255,247,0.05); }
+
+/* === TIMELINE === */
+.timeline-section {
+  padding: 16px;
+  margin: 0 16px 16px;
+}
+.timeline-section h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--neon-yellow);
+  margin-bottom: 12px;
+}
+.tl-legend {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.tl-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.tl-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+}
+.timeline-wrap {
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.timeline-wrap::-webkit-scrollbar { height: 6px; }
+.timeline-wrap::-webkit-scrollbar-track { background: var(--bg-dark); }
+.timeline-wrap::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 3px; }
+.timeline {
+  display: flex;
+  min-width: max-content;
+  gap: 0;
+  align-items: end;
+}
+.tl-month-label {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  color: var(--neon-cyan);
+  text-align: center;
+  padding: 4px 0;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 4px;
+}
+.tl-month {
+  display: flex;
+  flex-direction: column;
+  margin-right: 3px;
+}
+.tl-month-days {
+  display: flex;
+  gap: 1px;
+  height: 64px;
+  align-items: end;
+}
+.tl-day {
+  width: 8px;
+  min-height: 8px;
+  height: 8px;
+  background: var(--bg-input);
+  border-radius: 1px;
+  transition: all 0.1s;
+  position: relative;
+}
+.tl-day:hover { opacity: 0.7; }
+.tl-day.tl-weekend { background: var(--weekend); height: 12px; }
+.tl-day.tl-ferie { background: var(--neon-red); height: 52px; box-shadow: 0 0 4px rgba(255,49,49,0.4); }
+.tl-day.tl-rtt { background: var(--neon-green); height: 60px; box-shadow: 0 0 6px rgba(57,255,20,0.4); }
+.tl-day.tl-block { background: rgba(57,255,20,0.3); height: 44px; }
+.tl-day.tl-vacances { background: var(--neon-orange); opacity: 0.35; height: 16px; }
+.tl-day.tl-today { box-shadow: 0 0 6px var(--neon-yellow), inset 0 0 0 1px var(--neon-yellow); }
+.tl-day .tl-tip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-dark);
+  border: 1px solid var(--neon-cyan);
+  padding: 4px 8px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 10;
+  color: var(--neon-cyan);
+  pointer-events: none;
+}
+.tl-day:hover .tl-tip { display: block; }
+
+/* === TEAM MODE === */
+.team-section {
+  padding: 16px;
+  margin: 0 16px 16px;
+}
+.team-section h2 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 11px;
+  color: var(--neon-yellow);
+  margin-bottom: 12px;
+}
+.team-desc {
+  color: var(--text-dim);
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+.team-legend {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border-light);
+}
+.team-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+.team-controls .control-group { flex: 1; min-width: 120px; }
+.team-controls input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  color: var(--neon-green);
+  background: var(--bg-input);
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  outline: none;
+}
+.team-controls input[type="text"]:focus {
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 8px rgba(0,255,247,0.3);
+}
+.team-member {
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-left: 3px solid;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+}
+.team-member .tm-name { font-weight: bold; }
+.team-member .tm-dates { color: var(--text-dim); font-size: 14px; }
+.team-member .tm-remove {
+  cursor: pointer;
+  color: var(--neon-red);
+  font-family: 'Press Start 2P', monospace;
+  font-size: 8px;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+}
+.team-member .tm-remove:hover { text-shadow: 0 0 6px rgba(255,49,49,0.5); }
+.team-colors-0 { border-color: var(--neon-cyan); }
+.team-colors-1 { border-color: var(--neon-pink); }
+.team-colors-2 { border-color: var(--neon-orange); }
+.team-colors-3 { border-color: var(--neon-yellow); }
+.team-conflict {
+  padding: 10px 14px;
+  margin-top: 8px;
+  border: 1px solid var(--neon-red);
+  background: rgba(255,49,49,0.08);
+  font-size: 15px;
+  color: var(--neon-red);
+}
+.team-ok {
+  padding: 10px 14px;
+  margin-top: 8px;
+  border: 1px solid var(--neon-green);
+  background: rgba(57,255,20,0.08);
+  font-size: 15px;
+  color: var(--neon-green);
+}
+
+/* === FOOTER === */
+footer {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--text-dim);
+  font-size: 15px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 24px;
+}
+footer a { color: var(--neon-cyan); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* === TOAST === */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  background: var(--bg-panel);
+  border: 2px solid var(--neon-green);
+  color: var(--neon-green);
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s;
+  box-shadow: 0 0 20px rgba(57,255,20,0.3);
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+/* === RESPONSIVE === */
+@media (max-width: 640px) {
+  .controls { grid-template-columns: 1fr 1fr; }
+  .strategies { grid-template-columns: 1fr 1fr; }
+  .score-bar { gap: 12px; }
+  .countdown-bar { gap: 8px; }
+  .actions { justify-content: center; }
+  .calendar-grid { grid-template-columns: 1fr; }
+  .compare-row .count { min-width: 50px; font-size: 14px; }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* === IMPORT === */
+.import-section { padding: 12px 16px; margin: 0 16px 16px; }
+.import-section h2 { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--neon-yellow); margin-bottom: 8px; }
+.import-section textarea {
+  width: 100%;
+  height: 60px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: var(--neon-green);
+  background: var(--bg-input);
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  padding: 8px;
+  resize: vertical;
+  outline: none;
+}
+.import-section textarea:focus { border-color: var(--neon-cyan); }
+.import-section .import-row { display: flex; gap: 8px; margin-top: 6px; align-items: center; }
+
+/* === COMPARE COLLEGUE === */
+.compare-collegue { padding: 12px 16px; margin: 0 16px 16px; }
+.compare-collegue h2 { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--neon-yellow); margin-bottom: 8px; }
+.compare-collegue input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: 'VT323', monospace;
+  font-size: 16px;
+  color: var(--neon-cyan);
+  background: var(--bg-input);
+  border: 2px solid;
+  border-color: var(--bevel-dark) var(--bevel-light) var(--bevel-light) var(--bevel-dark);
+  outline: none;
+}
+.compare-collegue input:focus { border-color: var(--neon-cyan); }
+.day-cell.collegue-day {
+  box-shadow: inset 0 0 0 2px var(--neon-pink);
+}
+.day-cell.collegue-day.rtt {
+  box-shadow: inset 0 0 0 2px var(--neon-pink);
+}
+
+/* === ACHIEVEMENTS === */
+.achievements { padding: 16px; margin: 0 16px 16px; }
+.achievements h2 { font-family: 'Press Start 2P', monospace; font-size: 11px; color: var(--neon-yellow); margin-bottom: 12px; }
+.badge-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge {
+  padding: 8px 12px;
+  border: 2px solid var(--border-light);
+  background: var(--bg-input);
+  text-align: center;
+  min-width: 110px;
+  opacity: 0.4;
+  transition: all 0.3s;
+}
+.badge.unlocked {
+  opacity: 1;
+  border-color: var(--neon-yellow);
+  background: rgba(255,247,0,0.05);
+  box-shadow: 0 0 10px rgba(255,247,0,0.15);
+}
+.badge .badge-icon { font-family: 'Press Start 2P', monospace; font-size: 14px; color: var(--neon-yellow); }
+.badge .badge-name { font-family: 'Press Start 2P', monospace; font-size: 7px; color: var(--text-main); margin-top: 4px; }
+.badge .badge-desc { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+/* === PRINT === */
+@media print {
+  body { background: white; color: #111; font-size: 14px; }
+  body::after, .stars, .marquee-wrap, .countdown-bar, .strategies,
+  .actions, .team-section, .fun-facts, .compare-section,
+  .timeline-section, .achievements, .import-section, .compare-collegue,
+  .toast, footer, .controls { display: none !important; }
+  .bevel, .bevel-inset { border: 1px solid #ccc; background: white; }
+  .container { max-width: 100%; padding: 0; }
+  .logo { color: #111; text-shadow: none; font-size: 20px; }
+  .tagline { color: #444; text-shadow: none; font-size: 14px; }
+  .score-bar { border: 1px solid #ccc; background: white; }
+  .score-item .value { color: #111; text-shadow: none; font-size: 20px; }
+  .score-item .value.ratio { color: #111; }
+  .score-item .label { color: #666; }
+  .calendar-grid { gap: 8px; }
+  .month-card { border: 1px solid #ccc; background: white; }
+  .month-card .month-name { color: #111; border-bottom: 1px solid #ccc; }
+  .day-cell { border: 1px solid #eee; }
+  .day-cell.ferie { color: red; text-shadow: none; }
+  .day-cell.ferie::after { background: red; }
+  .day-cell.rtt { background: #d4ffd4; color: #006600; text-shadow: none; border-color: #006600; }
+  .day-cell.weekend { color: #999; background: #f5f5f5; }
+  .day-cell.in-block { background: #eeffee; }
+  .day-cell.today { box-shadow: inset 0 0 0 2px orange; }
+  .day-cell .tip { display: none; }
+  .legend { border-top: 1px solid #ccc; padding-top: 8px; }
+  .legend-dot { border: 1px solid #999; }
+  .legend-dot.l-rtt { background: #006600; }
+  .legend-dot.l-ferie { background: red; }
+  .legend-dot.l-weekend { background: #ccc; }
+  .legend-dot.l-block { background: #eeffee; border: 1px solid #006600; }
+  header { padding: 12px 0; }
+  header::after { content: 'Imprime le ' attr(data-print-date); display: block; font-size: 12px; color: #999; margin-top: 4px; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<main class="container">
+
+  <header>
+    <h1 class="logo">PONT OPTIMIZER<span class="v">3000</span></h1>
+    <p class="tagline">Maximisez vos jours off avec le minimum de RTT !</p>
+    <noscript><p style="color:#ff4444;text-align:center;padding:16px;font-size:18px">Ce site n&eacute;cessite JavaScript pour fonctionner. Activez JavaScript dans votre navigateur.</p></noscript>
+    <div class="marquee-wrap">
+      <div class="marquee" id="marquee"></div>
+    </div>
+  </header>
+
+  <!-- COUNTDOWN -->
+  <div class="countdown-bar bevel" id="countdown"></div>
+
+  <!-- CONTROLS -->
+  <div class="controls bevel">
+    <div class="control-group">
+      <label for="yearSelect">Ann&eacute;e</label>
+      <select id="yearSelect"></select>
+    </div>
+    <div class="control-group">
+      <label for="rttInput">RTT disponibles</label>
+      <input type="number" id="rttInput" min="0" max="30" value="9">
+    </div>
+    <div class="control-group">
+      <label for="regionSelect">R&eacute;gion</label>
+      <select id="regionSelect">
+        <option value="metropole">M&eacute;tropole</option>
+        <option value="alsace">Alsace-Moselle</option>
+        <option value="guadeloupe">Guadeloupe</option>
+        <option value="martinique">Martinique</option>
+        <option value="guyane">Guyane</option>
+        <option value="reunion">R&eacute;union</option>
+        <option value="mayotte">Mayotte</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label for="zoneSelect">Zone scolaire</label>
+      <select id="zoneSelect">
+        <option value="">Aucune</option>
+        <option value="A">Zone A</option>
+        <option value="B">Zone B</option>
+        <option value="C">Zone C</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- STRATEGIES -->
+  <div class="strategies" id="strategies">
+    <button class="strat-btn" data-strat="rat" onclick="applyStrategy('rat')">
+      <span class="icon">$$$</span><span class="strat-name">MODE RAT</span>
+      <span class="desc">Max jours, min RTT</span>
+    </button>
+    <button class="strat-btn" data-strat="equilibre" onclick="applyStrategy('equilibre')">
+      <span class="icon">=|=</span><span class="strat-name">EQUILIBRE</span>
+      <span class="desc">1 pause par mois</span>
+    </button>
+    <button class="strat-btn" data-strat="ete" onclick="applyStrategy('ete')">
+      <span class="icon">/*\</span><span class="strat-name">MODE ETE</span>
+      <span class="desc">Tout en juillet-ao&ucirc;t</span>
+    </button>
+    <button class="strat-btn" data-strat="baroudeur" onclick="applyStrategy('baroudeur')">
+      <span class="icon">&gt;&gt;&gt;</span><span class="strat-name">BAROUDEUR</span>
+      <span class="desc">Weekends prolong&eacute;s</span>
+    </button>
+    <button class="strat-btn" data-strat="custom" onclick="applyStrategy('custom')">
+      <span class="icon">&gt;_</span><span class="strat-name">MANUEL</span>
+      <span class="desc">Cliquez les jours</span>
+    </button>
+  </div>
+
+  <!-- SCORE -->
+  <div class="score-bar bevel" id="scoreBar">
+    <div class="score-item"><div class="value" id="scoreRtt">0</div><div class="label">RTT pos&eacute;s</div></div>
+    <div class="score-item"><div class="value" id="scoreDaysOff">0</div><div class="label">Jours off</div></div>
+    <div class="score-item"><div class="value ratio" id="scoreRatio">x0</div><div class="label">Ratio</div></div>
+    <div class="score-item"><div class="value" id="scoreRemaining">9</div><div class="label">RTT restants</div></div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button class="btn btn-primary" id="btnOptimize" onclick="optimizeAuto()" style="display:none">&gt;&gt; OPTIMISER</button>
+    <button class="btn btn-export" onclick="exportICal()">[.ics] EXPORT iCAL</button>
+    <button class="btn btn-share" onclick="shareConges()">[&lt;&gt;] PARTAGER MES CONGES</button>
+    <button class="btn" onclick="window.print()">[=] IMPRIMER</button>
+    <button class="btn btn-reset" onclick="resetAll()">[X] RESET</button>
+  </div>
+
+  <!-- IMPORT DATES -->
+  <div class="import-section bevel" id="importSection">
+    <h2>[>>] IMPORTER DES DATES</h2>
+    <label for="importText" class="sr-only">Dates &agrave; importer</label>
+    <textarea id="importText" placeholder="Collez vos dates au format JJ/MM/AAAA : 03/04/2026, 04/05/2026, 11/05/2026..."></textarea>
+    <div class="import-row">
+      <button class="btn btn-primary" onclick="importDates('rtt')" style="font-size:8px">IMPORTER</button>
+      <span id="importResult" style="color:var(--text-dim);font-size:14px"></span>
+    </div>
+  </div>
+
+  <!-- COMPARE COLLEGUE -->
+  <div class="compare-collegue bevel" id="compareCollegue">
+    <h2>[vs] COMPARER AVEC UN COLL&Egrave;GUE</h2>
+    <div style="display:flex;gap:8px;align-items:end">
+      <div style="flex:1"><label for="collegueUrl" class="sr-only">Lien du coll&egrave;gue</label><input type="text" id="collegueUrl" placeholder="Collez le lien partag&eacute; d'un coll&egrave;gue"></div>
+      <button class="btn btn-primary" onclick="loadCollegue()" style="font-size:8px">COMPARER</button>
+      <button class="btn btn-reset" onclick="clearCollegue()" style="font-size:8px">[X]</button>
+    </div>
+    <div id="collegueResult" style="margin-top:8px"></div>
+  </div>
+
+  <!-- TEAM MODE -->
+  <div class="team-section bevel" id="teamSection">
+    <h2>[++] MODE &Eacute;QUIPE</h2>
+    <p class="team-desc">Optimisation RTT en &eacute;quipe : chaque membre re&ccedil;oit les meilleurs ponts en &eacute;vitant que tout le monde soit absent le m&ecirc;me jour.</p>
+    <div class="team-legend" id="teamLegend" style="display:none">
+      <div class="tl-legend-item" id="teamLegItem0" style="display:none"><div class="tl-legend-dot" style="background:var(--neon-cyan)"></div> <span id="teamLeg0"></span></div>
+      <div class="tl-legend-item" id="teamLegItem1" style="display:none"><div class="tl-legend-dot" style="background:var(--neon-pink)"></div> <span id="teamLeg1"></span></div>
+      <div class="tl-legend-item" id="teamLegItem2" style="display:none"><div class="tl-legend-dot" style="background:var(--neon-orange)"></div> <span id="teamLeg2"></span></div>
+      <div class="tl-legend-item" id="teamLegItem3" style="display:none"><div class="tl-legend-dot" style="background:var(--neon-yellow)"></div> <span id="teamLeg3"></span></div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-red)"></div> Tous absents</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-orange);opacity:0.5"></div> 2+ absents</div>
+    </div>
+    <div class="team-controls">
+      <div class="control-group">
+        <label for="teamNameInput">Nom</label>
+        <input type="text" id="teamNameInput" placeholder="Pr&eacute;nom">
+      </div>
+      <div class="control-group">
+        <label>&nbsp;</label>
+        <button class="btn btn-primary" onclick="addTeamMember()" style="width:100%">+ AJOUTER</button>
+      </div>
+    </div>
+    <div id="teamList"></div>
+    <div id="teamResult"></div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot l-ferie"></div> F&eacute;ri&eacute;</div>
+    <div class="legend-item"><div class="legend-dot l-rtt"></div> RTT pos&eacute;</div>
+    <div class="legend-item"><div class="legend-dot l-weekend"></div> Weekend</div>
+    <div class="legend-item"><div class="legend-dot l-block"></div> Bloc vacances</div>
+    <div class="legend-item"><div class="legend-dot l-today"></div> Aujourd'hui</div>
+    <div class="legend-item" id="legendCollegue" style="display:none"><div class="legend-dot" style="background:transparent;box-shadow:inset 0 0 0 2px var(--neon-pink)"></div> Coll&egrave;gue</div>
+    <div class="legend-item" id="legendVacances" style="display:none"><div class="legend-dot l-scolaire"></div> Vac. scolaires</div>
+  </div>
+
+  <!-- CALENDAR -->
+  <div class="calendar-grid" id="calendarGrid"></div>
+
+  <!-- FUN FACTS -->
+  <div class="fun-facts bevel" id="funFacts"></div>
+
+  <!-- MULTI-YEAR COMPARE -->
+  <div class="compare-section bevel" id="compareSection"></div>
+
+  <!-- TIMELINE -->
+  <div class="timeline-section bevel" id="timelineSection">
+    <h2>[&gt;&gt;] VUE TIMELINE</h2>
+    <div class="tl-legend">
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-green)"></div> RTT</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-red)"></div> F&eacute;ri&eacute;</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:rgba(57,255,20,0.3)"></div> Bloc</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--weekend)"></div> Weekend</div>
+      <div class="tl-legend-item" id="tlLegendVac" style="display:none"><div class="tl-legend-dot" style="background:var(--neon-orange);opacity:0.4"></div> Vacances</div>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline" id="timeline"></div>
+    </div>
+  </div>
+
+  <!-- ACHIEVEMENTS -->
+  <div class="achievements bevel" id="achievements">
+    <h2>[*] ACHIEVEMENTS</h2>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+
+  <footer>
+    <p>PONT OPTIMIZER 3000 &mdash; Fait avec &#9829; en France</p>
+    <p>Aucun cookie, aucun tracking, tout calcul&eacute; localement</p>
+    <p>Donn&eacute;es : jours f&eacute;ri&eacute;s officiels &mdash; Code source libre</p>
+    <p style="margin-top:12px">
+      <button class="btn btn-share" onclick="shareSite()" style="font-size:8px;padding:8px 16px">[&lt;&gt;] PARTAGER LE SITE &Agrave; UN COLL&Egrave;GUE</button>
+    </p>
+  </footer>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// FRENCH PUBLIC HOLIDAYS ENGINE
+// ============================================================
+
+function easterSunday(year) {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19 * a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2 * e + 2 * i - h - k) % 7;
+  const m = Math.floor((a + 11 * h + 22 * l) / 451);
+  const month = Math.floor((h + l - 7 * m + 114) / 31);
+  const day = ((h + l - 7 * m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+function getPublicHolidays(year, region = 'metropole') {
+  const easter = easterSunday(year);
+  const easterMs = easter.getTime();
+  const day = 86400000;
+
+  const holidays = [
+    { date: new Date(year, 0, 1), name: "Jour de l'An" },
+    { date: new Date(easterMs + 1 * day), name: "Lundi de P\u00e2ques" },
+    { date: new Date(year, 4, 1), name: "F\u00eate du Travail" },
+    { date: new Date(year, 4, 8), name: "Victoire 1945" },
+    { date: new Date(easterMs + 39 * day), name: "Ascension" },
+    { date: new Date(easterMs + 50 * day), name: "Lundi de Pentec\u00f4te" },
+    { date: new Date(year, 6, 14), name: "F\u00eate Nationale" },
+    { date: new Date(year, 7, 15), name: "Assomption" },
+    { date: new Date(year, 10, 1), name: "Toussaint" },
+    { date: new Date(year, 10, 11), name: "Armistice" },
+    { date: new Date(year, 11, 25), name: "No\u00ebl" },
+  ];
+
+  if (region === 'alsace') {
+    holidays.push({ date: new Date(easterMs - 2 * day), name: "Vendredi Saint" });
+    holidays.push({ date: new Date(year, 11, 26), name: "Saint-Etienne" });
+  }
+
+  const domHolidays = {
+    guadeloupe: { month: 4, day: 27, name: "Abolition de l'esclavage" },
+    martinique: { month: 4, day: 22, name: "Abolition de l'esclavage" },
+    guyane: { month: 5, day: 10, name: "Abolition de l'esclavage" },
+    reunion: { month: 11, day: 20, name: "Abolition de l'esclavage" },
+    mayotte: { month: 3, day: 27, name: "Abolition de l'esclavage" },
+  };
+  if (domHolidays[region]) {
+    const dh = domHolidays[region];
+    holidays.push({ date: new Date(year, dh.month, dh.day), name: dh.name });
+  }
+
+  return holidays.sort((a, b) => a.date - b.date);
+}
+
+function dateKey(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function isWeekend(d) {
+  return d.getDay() === 0 || d.getDay() === 6;
+}
+
+function addDays(d, n) {
+  return new Date(d.getTime() + n * 86400000);
+}
+
+// ============================================================
+// SCHOOL VACATIONS (Vacances scolaires)
+// ============================================================
+const SCHOOL_VACATIONS = {
+  '2025-2026': {
+    all: [
+      ['2025-07-05', '2025-09-01'],
+      ['2025-10-18', '2025-11-03'],
+      ['2025-12-20', '2026-01-05'],
+    ],
+    A: [
+      ['2026-02-07', '2026-02-23'],
+      ['2026-04-04', '2026-04-20'],
+    ],
+    B: [
+      ['2026-02-21', '2026-03-09'],
+      ['2026-04-18', '2026-05-04'],
+    ],
+    C: [
+      ['2026-02-14', '2026-03-02'],
+      ['2026-04-11', '2026-04-27'],
+    ],
+  },
+  '2026-2027': {
+    all: [
+      ['2026-07-04', '2026-09-01'],
+      ['2026-10-17', '2026-11-02'],
+      ['2026-12-19', '2027-01-04'],
+    ],
+    A: [
+      ['2027-02-13', '2027-03-01'],
+      ['2027-04-10', '2027-04-27'],
+    ],
+    B: [
+      ['2027-02-06', '2027-02-22'],
+      ['2027-04-03', '2027-04-20'],
+    ],
+    C: [
+      ['2027-02-20', '2027-03-08'],
+      ['2027-04-17', '2027-05-04'],
+    ],
+  },
+  '2027-2028': {
+    all: [
+      ['2027-07-03', '2027-09-01'],
+      ['2027-10-23', '2027-11-08'],
+      ['2027-12-18', '2028-01-03'],
+    ],
+    A: [
+      ['2028-02-12', '2028-02-28'],
+      ['2028-04-08', '2028-04-24'],
+    ],
+    B: [
+      ['2028-02-26', '2028-03-13'],
+      ['2028-04-22', '2028-05-08'],
+    ],
+    C: [
+      ['2028-02-05', '2028-02-21'],
+      ['2028-04-15', '2028-05-01'],
+    ],
+  },
+};
+
+function getSchoolVacationDays(year, zone) {
+  if (!zone) return new Set();
+  const vacDays = new Set();
+  const schoolYears = [`${year-1}-${year}`, `${year}-${year+1}`];
+  for (const sy of schoolYears) {
+    const data = SCHOOL_VACATIONS[sy];
+    if (!data) continue;
+    const ranges = [...(data.all || []), ...(data[zone] || [])];
+    for (const [startStr, endStr] of ranges) {
+      let d = new Date(startStr + 'T00:00:00');
+      const end = new Date(endStr + 'T00:00:00');
+      while (d <= end) {
+        if (d.getFullYear() === year) vacDays.add(dateKey(d));
+        d = addDays(d, 1);
+      }
+    }
+  }
+  return vacDays;
+}
+
+// ============================================================
+// SECURITY: HTML ESCAPING
+// ============================================================
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+}
+
+function isValidDateKey(dk) {
+  return /^\d{4}-\d{2}-\d{2}$/.test(dk);
+}
+
+const VALID_REGIONS = ['metropole','alsace','guadeloupe','martinique','guyane','reunion','mayotte'];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  year: new Date().getFullYear(),
+  rttTotal: 9,
+  region: 'metropole',
+  zone: '',
+  rttDays: new Set(),
+  strategy: 'rat',
+  colleagueDays: new Set(),
+};
+
+// ============================================================
+// BRIDGE/PONT DETECTION
+// ============================================================
+function getMinDate(year) {
+  const now = new Date();
+  if (year === now.getFullYear()) {
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  }
+  return new Date(year, 0, 1);
+}
+
+function findBridgeOpportunities(year, region) {
+  const holidays = getPublicHolidays(year, region);
+  const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+  const bridges = [];
+  const minDate = getMinDate(year);
+
+  for (const h of holidays) {
+    const d = h.date;
+    const dow = d.getDay();
+
+    if (dow === 2) {
+      const monday = addDays(d, -1);
+      if (!holidayKeys.has(dateKey(monday))) {
+        bridges.push({ rttDays: [monday], daysOff: 4, label: `Pont ${h.name} (lundi)`, efficiency: 4 });
+      }
+    }
+    if (dow === 4) {
+      const friday = addDays(d, 1);
+      if (!holidayKeys.has(dateKey(friday))) {
+        bridges.push({ rttDays: [friday], daysOff: 4, label: `Pont ${h.name} (vendredi)`, efficiency: 4 });
+      }
+    }
+    if (dow === 3) {
+      const mon = addDays(d, -2);
+      const tue = addDays(d, -1);
+      if (!holidayKeys.has(dateKey(mon)) && !holidayKeys.has(dateKey(tue))) {
+        bridges.push({ rttDays: [mon, tue], daysOff: 5, label: `Pont ${h.name} (lun-mar)`, efficiency: 2.5 });
+      }
+      const thu = addDays(d, 1);
+      const fri = addDays(d, 2);
+      if (!holidayKeys.has(dateKey(thu)) && !holidayKeys.has(dateKey(fri))) {
+        bridges.push({ rttDays: [thu, fri], daysOff: 5, label: `Pont ${h.name} (jeu-ven)`, efficiency: 2.5 });
+      }
+      if (!holidayKeys.has(dateKey(mon)) && !holidayKeys.has(dateKey(tue)) &&
+          !holidayKeys.has(dateKey(thu)) && !holidayKeys.has(dateKey(fri))) {
+        bridges.push({ rttDays: [mon, tue, thu, fri], daysOff: 9, label: `Semaine ${h.name}`, efficiency: 2.25 });
+      }
+    }
+    if (dow === 1) {
+      const fri = addDays(d, -3);
+      if (!holidayKeys.has(dateKey(fri)) && !isWeekend(fri)) {
+        bridges.push({ rttDays: [fri], daysOff: 4, label: `Pont ${h.name} (vendredi avant)`, efficiency: 4 });
+      }
+    }
+    if (dow === 5) {
+      const mon = addDays(d, 3);
+      if (!holidayKeys.has(dateKey(mon)) && !isWeekend(mon)) {
+        bridges.push({ rttDays: [mon], daysOff: 4, label: `Pont ${h.name} (lundi apr\u00e8s)`, efficiency: 4 });
+      }
+    }
+  }
+
+  for (let i = 0; i < holidays.length; i++) {
+    for (let j = i + 1; j < holidays.length; j++) {
+      const diff = Math.round((holidays[j].date - holidays[i].date) / 86400000);
+      if (diff > 1 && diff <= 7) {
+        const gapDays = [];
+        for (let k = 1; k < diff; k++) {
+          const gapDay = addDays(holidays[i].date, k);
+          if (!isWeekend(gapDay) && !holidayKeys.has(dateKey(gapDay))) {
+            gapDays.push(gapDay);
+          }
+        }
+        if (gapDays.length > 0 && gapDays.length <= 4) {
+          let start = holidays[i].date;
+          let end = holidays[j].date;
+          while (isWeekend(addDays(start, -1)) || holidayKeys.has(dateKey(addDays(start, -1)))) start = addDays(start, -1);
+          while (isWeekend(addDays(end, 1)) || holidayKeys.has(dateKey(addDays(end, 1)))) end = addDays(end, 1);
+          const totalDays = Math.round((end - start) / 86400000) + 1;
+          bridges.push({
+            rttDays: gapDays,
+            daysOff: totalDays,
+            label: `M\u00e9ga-pont ${holidays[i].name} \u2192 ${holidays[j].name}`,
+            efficiency: totalDays / gapDays.length,
+          });
+        }
+      }
+    }
+  }
+
+  const seen = new Set();
+  return bridges.filter(b => {
+    // Skip bridges with RTT days in the past
+    if (b.rttDays.some(d => d < minDate)) return false;
+    const key = b.rttDays.map(d => dateKey(d)).sort().join(',');
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  }).sort((a, b) => b.efficiency - a.efficiency);
+}
+
+// ============================================================
+// OPTIMIZER: GREEDY BY EFFICIENCY
+// ============================================================
+function optimizeRTT(year, region, rttBudget) {
+  const bridges = findBridgeOpportunities(year, region);
+  const used = new Set();
+  const selected = [];
+  let rttLeft = rttBudget;
+
+  for (const bridge of bridges) {
+    if (bridge.rttDays.length <= rttLeft) {
+      const keys = bridge.rttDays.map(d => dateKey(d));
+      if (keys.every(k => !used.has(k))) {
+        keys.forEach(k => used.add(k));
+        selected.push(bridge);
+        rttLeft -= bridge.rttDays.length;
+      }
+    }
+  }
+
+  return { selected, rttUsed: rttBudget - rttLeft, rttDays: used };
+}
+
+// ============================================================
+// STRATEGIES
+// ============================================================
+function applyStrategy(name) {
+  state.strategy = name;
+  document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === name));
+
+  // OPTIMISER only visible in manual mode
+  document.getElementById('btnOptimize').style.display = (name === 'custom') ? '' : 'none';
+
+  if (name === 'custom') {
+    state.rttDays.clear();
+    render();
+    return;
+  }
+
+  state.rttDays.clear();
+  const budget = state.rttTotal;
+  const target = state.rttDays;
+
+  if (name === 'rat') {
+    const result = optimizeRTT(state.year, state.region, budget);
+    for (const dk of result.rttDays) target.add(dk);
+  } else if (name === 'equilibre') {
+    // 1 break per month, prefer Mon/Fri adjacent to holidays
+    const holidays = getPublicHolidays(state.year, state.region);
+    const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+    const minD = getMinDate(state.year);
+    let left = budget;
+    for (let m = 0; m < 12 && left > 0; m++) {
+      const candidates = [];
+      for (let d = 1; d <= 31; d++) {
+        const date = new Date(state.year, m, d);
+        if (date.getMonth() !== m) break;
+        if (date < minD) continue;
+        const dow = date.getDay();
+        const dk = dateKey(date);
+        if ((dow === 1 || dow === 5) && !holidayKeys.has(dk) && !isWeekend(date)) {
+          // Score: adjacent to a holiday = better
+          let score = 0;
+          if (dow === 1) { // Monday: check Tue or previous Fri
+            if (holidayKeys.has(dateKey(addDays(date, 1)))) score = 2;
+            if (holidayKeys.has(dateKey(addDays(date, -3)))) score = 2;
+          } else { // Friday: check Thu or next Mon
+            if (holidayKeys.has(dateKey(addDays(date, -1)))) score = 2;
+            if (holidayKeys.has(dateKey(addDays(date, 3)))) score = 2;
+          }
+          candidates.push({ dk, score });
+        }
+      }
+      if (candidates.length > 0) {
+        candidates.sort((a, b) => b.score - a.score);
+        target.add(candidates[0].dk);
+        left--;
+      }
+    }
+  } else if (name === 'ete') {
+    // Smart summer: use bridges around summer holidays first, then fill consecutive days
+    const bridges = findBridgeOpportunities(state.year, state.region);
+    const summerBridges = bridges.filter(b => {
+      return b.rttDays.every(d => d.getMonth() >= 5 && d.getMonth() <= 7); // June-August
+    });
+    const holidays = getPublicHolidays(state.year, state.region);
+    const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+    const minD = getMinDate(state.year);
+    const used = new Set();
+    let left = budget;
+
+    // Pass 1: summer bridges
+    for (const bridge of summerBridges) {
+      if (bridge.rttDays.length > left) continue;
+      const keys = bridge.rttDays.map(d => dateKey(d));
+      if (keys.every(k => !used.has(k))) {
+        keys.forEach(k => { used.add(k); target.add(k); });
+        left -= keys.length;
+      }
+    }
+
+    // Pass 2: fill remaining as consecutive weekdays in Aug/July
+    for (const month of [7, 6]) {
+      for (let d = 1; d <= 31 && left > 0; d++) {
+        const date = new Date(state.year, month, d);
+        if (date.getMonth() !== month) break;
+        if (date < minD) continue;
+        const dk = dateKey(date);
+        if (!isWeekend(date) && !holidayKeys.has(dk) && !used.has(dk)) {
+          target.add(dk);
+          used.add(dk);
+          left--;
+        }
+      }
+    }
+  } else if (name === 'baroudeur') {
+    // Spaced long weekends, prefer those adjacent to holidays
+    const holidays = getPublicHolidays(state.year, state.region);
+    const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+    const minD = getMinDate(state.year);
+    let left = budget;
+    const candidates = [];
+    for (let m = 0; m < 12; m++) {
+      for (let d = 1; d <= 31; d++) {
+        const date = new Date(state.year, m, d);
+        if (date.getMonth() !== m) break;
+        if (date < minD) continue;
+        const dow = date.getDay();
+        if ((dow === 5 || dow === 1) && !holidayKeys.has(dateKey(date))) {
+          let score = 0;
+          if (dow === 1) {
+            if (holidayKeys.has(dateKey(addDays(date, 1)))) score = 2;
+            if (holidayKeys.has(dateKey(addDays(date, -3)))) score = 2;
+          } else {
+            if (holidayKeys.has(dateKey(addDays(date, -1)))) score = 2;
+            if (holidayKeys.has(dateKey(addDays(date, 3)))) score = 2;
+          }
+          candidates.push({ date, score });
+        }
+      }
+    }
+    // Sort by score desc, then by date
+    candidates.sort((a, b) => b.score - a.score || a.date - b.date);
+    const picked = [];
+    for (const c of candidates) {
+      if (left <= 0) break;
+      // Check 14-day minimum spacing from all picked days
+      if (picked.some(p => Math.abs(c.date - p) < 14 * 86400000)) continue;
+      target.add(dateKey(c.date));
+      picked.push(c.date);
+      left--;
+    }
+  }
+
+  render();
+}
+
+function optimizeAuto() {
+  // Keep manually placed RTT days, optimize the remaining budget
+  const manualDays = new Set(state.rttDays);
+  const rttLeft = state.rttTotal - manualDays.size;
+  if (rttLeft <= 0) {
+    showToast('Tous vos RTT sont d\u00e9j\u00e0 pos\u00e9s !');
+    return;
+  }
+
+  const bridges = findBridgeOpportunities(state.year, state.region);
+  const used = new Set(manualDays);
+
+  for (const bridge of bridges) {
+    if (bridge.rttDays.length <= (state.rttTotal - used.size)) {
+      const keys = bridge.rttDays.map(d => dateKey(d));
+      if (keys.every(k => !used.has(k))) {
+        keys.forEach(k => used.add(k));
+      }
+    }
+  }
+
+  state.rttDays = used;
+  state.strategy = 'custom';
+  document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === 'custom'));
+  render();
+  showToast(`${used.size - manualDays.size} RTT ajout\u00e9s automatiquement`);
+}
+
+// ============================================================
+// CALCULATE SCORE
+// ============================================================
+function calculateScore() {
+  const holidays = getPublicHolidays(state.year, state.region);
+  const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+
+  const allOff = new Set();
+  for (let m = 0; m < 12; m++) {
+    for (let d = 1; d <= 31; d++) {
+      const date = new Date(state.year, m, d);
+      if (date.getMonth() !== m) break;
+      const dk = dateKey(date);
+      if (isWeekend(date) || holidayKeys.has(dk) || state.rttDays.has(dk)) {
+        allOff.add(dk);
+      }
+    }
+  }
+
+  const blockDays = new Set();
+  for (const dk of state.rttDays) {
+    const parts = dk.split('-');
+    let date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+
+    let d = new Date(date);
+    while (allOff.has(dateKey(d))) { blockDays.add(dateKey(d)); d = addDays(d, -1); }
+    d = addDays(date, 1);
+    while (allOff.has(dateKey(d))) { blockDays.add(dateKey(d)); d = addDays(d, 1); }
+  }
+
+  const totalDaysOff = blockDays.size;
+  const rttUsed = state.rttDays.size;
+  const ratio = rttUsed > 0 ? (totalDaysOff / rttUsed).toFixed(1) : 0;
+
+  return { rttUsed, totalDaysOff, ratio, blockDays };
+}
+
+// ============================================================
+// RENDER
+// ============================================================
+let _cachedScore = null;
+function getCachedScore() {
+  if (!_cachedScore) _cachedScore = calculateScore();
+  return _cachedScore;
+}
+
+function render() {
+  _cachedScore = null; // invalidate cache
+  renderCalendar();
+  renderScore();
+  renderCountdown();
+  renderTimeline();
+  renderFunFacts();
+  renderCompare();
+  renderAchievements();
+  updateUrl();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  grid.innerHTML = '';
+
+  const holidays = getPublicHolidays(state.year, state.region);
+  const holidayMap = {};
+  holidays.forEach(h => { holidayMap[dateKey(h.date)] = h.name; });
+
+  const { blockDays } = getCachedScore();
+
+  const vacDays = getSchoolVacationDays(state.year, state.zone);
+  document.getElementById('legendVacances').style.display = state.zone ? '' : 'none';
+  document.getElementById('legendCollegue').style.display = state.colleagueDays.size > 0 ? '' : 'none';
+
+  const monthNames = ['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
+  const dayNames = ['L','M','M','J','V','S','D'];
+
+  const today = dateKey(new Date());
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  for (let m = 0; m < 12; m++) {
+    // Skip past months for current year
+    if (state.year === currentYear && m < currentMonth) continue;
+
+    const card = document.createElement('div');
+    card.className = 'month-card bevel';
+
+    let html = `<div class="month-name">${monthNames[m]} ${state.year}</div>`;
+    html += `<div class="day-headers">${dayNames.map(d => `<div>${d}</div>`).join('')}</div>`;
+    html += `<div class="days">`;
+
+    const firstDay = new Date(state.year, m, 1);
+    let startDow = firstDay.getDay();
+    if (startDow === 0) startDow = 7;
+    const daysInMonth = new Date(state.year, m + 1, 0).getDate();
+
+    for (let i = 1; i < startDow; i++) {
+      html += `<div class="day-cell empty"></div>`;
+    }
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(state.year, m, d);
+      const dk = dateKey(date);
+      const we = isWeekend(date);
+      const isFerie = !!holidayMap[dk];
+      const isRtt = state.rttDays.has(dk);
+      const isBlock = blockDays.has(dk) && !isRtt && !isFerie && !we;
+      const isToday = dk === today;
+      const isVac = vacDays.has(dk);
+      const isCollegue = state.colleagueDays.has(dk);
+
+      let cls = 'day-cell';
+      if (we) cls += ' weekend';
+      if (isFerie) cls += ' ferie';
+      if (isRtt) cls += ' rtt';
+      if (isBlock) cls += ' in-block';
+      if (isVac && !isRtt && !isFerie) cls += ' vacances';
+      if (isToday) cls += ' today';
+      if (isCollegue) cls += ' collegue-day';
+
+      let tip = '';
+      if (isFerie) tip = `<span class="tip">${holidayMap[dk]}</span>`;
+      else if (isRtt) tip = `<span class="tip">RTT pos\u00e9</span>`;
+      else if (isCollegue) tip = `<span class="tip">Coll\u00e8gue absent</span>`;
+      else if (isVac && !we) tip = `<span class="tip">Vacances scolaires</span>`;
+
+      const tabAttr = (we || isFerie) ? '' : ' tabindex="0" role="button"';
+      html += `<div class="${cls}" data-date="${dk}" onclick="toggleDay('${dk}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDay('${dk}')}"${tabAttr}>${d}${tip}</div>`;
+    }
+
+    html += `</div>`;
+    card.innerHTML = html;
+    grid.appendChild(card);
+  }
+}
+
+function toggleDay(dk) {
+  const parts = dk.split('-');
+  const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+  if (isWeekend(date)) return;
+  const holidays = getPublicHolidays(state.year, state.region);
+  if (holidays.some(h => dateKey(h.date) === dk)) return;
+
+  if (state.rttDays.has(dk)) {
+    state.rttDays.delete(dk);
+  } else {
+    if (state.rttDays.size >= state.rttTotal) { showToast('Plus de RTT disponibles !'); return; }
+    state.rttDays.add(dk);
+  }
+
+  state.strategy = 'custom';
+  document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === 'custom'));
+  document.getElementById('btnOptimize').style.display = '';
+  render();
+}
+
+function renderScore() {
+  const { rttUsed, totalDaysOff, ratio } = getCachedScore();
+  document.getElementById('scoreRtt').textContent = rttUsed;
+  document.getElementById('scoreDaysOff').textContent = totalDaysOff;
+  document.getElementById('scoreRatio').textContent = `x${ratio}`;
+  document.getElementById('scoreRemaining').textContent = state.rttTotal - rttUsed;
+}
+
+function renderCountdown() {
+  const now = new Date();
+  const holidays = getPublicHolidays(now.getFullYear(), state.region);
+  let next = null;
+
+  for (const h of holidays) {
+    if (h.date > now) { next = h; break; }
+  }
+
+  if (!next) {
+    const nextYearHolidays = getPublicHolidays(now.getFullYear() + 1, state.region);
+    next = nextYearHolidays[0];
+  }
+
+  if (!next) return;
+
+  const diff = next.date - now;
+  const days = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins = Math.floor((diff % 3600000) / 60000);
+
+  document.getElementById('countdown').innerHTML = `
+    <div>
+      <div class="label">Prochain jour f\u00e9ri\u00e9</div>
+      <div class="name">${next.name}</div>
+    </div>
+    <div class="countdown-digits">
+      <div class="digit-box bevel-inset">${days}<small>JOURS</small></div>
+      <div class="digit-box bevel-inset">${hours}<small>HEURES</small></div>
+      <div class="digit-box bevel-inset">${mins}<small>MIN</small></div>
+    </div>
+  `;
+}
+
+function renderFunFacts() {
+  const el = document.getElementById('funFacts');
+  const holidays = getPublicHolidays(state.year, state.region);
+  const bridges = findBridgeOpportunities(state.year, state.region);
+
+  const thursdayBridges = bridges.filter(b => b.rttDays.length === 1 && b.efficiency >= 4);
+  const megaBridges = bridges.filter(b => b.label.startsWith('Mega'));
+
+  const { totalDaysOff, rttUsed } = getCachedScore();
+
+  let facts = [];
+  facts.push(`<strong>${holidays.length}</strong> jours f\u00e9ri\u00e9s en ${state.year} (${state.region === 'alsace' ? '+2 Alsace-Moselle' : 'm\u00e9tropole'})`);
+  facts.push(`<strong>${thursdayBridges.length}</strong> ponts \u00e0 1 RTT (ratio x4) disponibles`);
+  if (megaBridges.length > 0) {
+    facts.push(`<strong>${megaBridges.length}</strong> m\u00e9ga-pont${megaBridges.length > 1 ? 's' : ''} possibles (f\u00e9ri\u00e9s proches)`);
+  }
+
+  const monthBridges = Array(12).fill(0);
+  bridges.forEach(b => {
+    b.rttDays.forEach(d => { monthBridges[d.getMonth()]++; });
+  });
+  const bestMonth = monthBridges.indexOf(Math.max(...monthBridges));
+  const monthNames = ['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
+  facts.push(`Meilleur mois pour les ponts : <strong>${monthNames[bestMonth]}</strong>`);
+
+  if (rttUsed > 0) {
+    facts.push(`Avec <strong>${rttUsed} RTT</strong> vous obtenez <strong>${totalDaysOff} jours off</strong> \u2014 efficacit\u00e9 <strong>x${(totalDaysOff/rttUsed).toFixed(1)}</strong>`);
+  }
+
+  const xmas = new Date(state.year, 11, 25);
+  const xmasDow = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'][xmas.getDay()];
+  facts.push(`No\u00ebl ${state.year} tombe un <strong>${xmasDow}</strong>`);
+
+  el.innerHTML = `<h2>[?!] LE SAVIEZ-VOUS ?</h2>` + facts.map(f => `<div class="fact">${f}</div>`).join('');
+}
+
+function renderCompare() {
+  const el = document.getElementById('compareSection');
+  const currentYear = new Date().getFullYear();
+
+  let maxBridges = 0;
+  const yearData = [];
+
+  for (let y = currentYear; y <= currentYear + 10; y++) {
+    const bridges = findBridgeOpportunities(y, state.region);
+    const x4 = bridges.filter(b => b.efficiency >= 4).length;
+    const result = optimizeRTT(y, state.region, state.rttTotal);
+    const holidayKeys = new Set(getPublicHolidays(y, state.region).map(h => dateKey(h.date)));
+
+    const allOff = new Set();
+    for (let m = 0; m < 12; m++) {
+      for (let d = 1; d <= 31; d++) {
+        const date = new Date(y, m, d);
+        if (date.getMonth() !== m) break;
+        const dk = dateKey(date);
+        if (isWeekend(date) || holidayKeys.has(dk) || result.rttDays.has(dk)) allOff.add(dk);
+      }
+    }
+
+    let totalOff = 0;
+    for (const rttDk of result.rttDays) {
+      const parts = rttDk.split('-');
+      let d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      let cursor = new Date(d);
+      while (allOff.has(dateKey(cursor))) { totalOff++; allOff.delete(dateKey(cursor)); cursor = addDays(cursor, -1); }
+      cursor = addDays(d, 1);
+      while (allOff.has(dateKey(cursor))) { totalOff++; allOff.delete(dateKey(cursor)); cursor = addDays(cursor, 1); }
+    }
+
+    yearData.push({ year: y, bridges: x4, totalOff, rttUsed: result.rttDays.size });
+    if (totalOff > maxBridges) maxBridges = totalOff;
+  }
+
+  const bestYear = yearData.reduce((a, b) => a.totalOff > b.totalOff ? a : b);
+
+  let html = `<h2>[#1] CLASSEMENT DES ANN\u00c9ES (avec ${state.rttTotal} RTT en mode Rat)</h3>`;
+  yearData.sort((a, b) => b.totalOff - a.totalOff);
+
+  yearData.forEach((yd) => {
+    const pct = maxBridges > 0 ? (yd.totalOff / maxBridges * 100) : 0;
+    const isBest = yd.year === bestYear.year;
+    const isCurrent = yd.year === state.year;
+    let cls = 'compare-row';
+    if (isBest) cls += ' best';
+    if (isCurrent) cls += ' current';
+
+    html += `<div class="${cls}">
+      <div class="yr">${yd.year}${isBest ? ' \u2605' : ''}</div>
+      <div class="bar-bg"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div class="count">${yd.totalOff}j off (${yd.bridges} ponts x4)</div>
+    </div>`;
+  });
+
+  el.innerHTML = html;
+}
+
+// ============================================================
+// TIMELINE
+// ============================================================
+function renderTimeline() {
+  const el = document.getElementById('timeline');
+  el.innerHTML = '';
+
+  const holidays = getPublicHolidays(state.year, state.region);
+  const holidayMap = {};
+  holidays.forEach(h => { holidayMap[dateKey(h.date)] = h.name; });
+
+  const { blockDays } = getCachedScore();
+  const vacDays = getSchoolVacationDays(state.year, state.zone);
+  const monthNames = ['Jan','F\u00e9v','Mar','Avr','Mai','Jun','Jul','Ao\u00fb','Sep','Oct','Nov','D\u00e9c'];
+  const today = dateKey(new Date());
+
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
+  // Show/hide vacation legend
+  document.getElementById('tlLegendVac').style.display = state.zone ? '' : 'none';
+
+  for (let m = 0; m < 12; m++) {
+    if (state.year === currentYear && m < currentMonth) continue;
+
+    const monthDiv = document.createElement('div');
+    monthDiv.className = 'tl-month';
+
+    const label = document.createElement('div');
+    label.className = 'tl-month-label';
+    label.textContent = monthNames[m];
+    monthDiv.appendChild(label);
+
+    const daysContainer = document.createElement('div');
+    daysContainer.className = 'tl-month-days';
+
+    const daysInMonth = new Date(state.year, m + 1, 0).getDate();
+    for (let d = 1; d <= daysInMonth; d++) {
+      const date = new Date(state.year, m, d);
+      const dk = dateKey(date);
+      const we = isWeekend(date);
+      const isFerie = !!holidayMap[dk];
+      const isRtt = state.rttDays.has(dk);
+      const isBlock = blockDays.has(dk) && !isRtt && !isFerie && !we;
+      const isVac = vacDays.has(dk) && !isRtt && !isFerie;
+      const isToday = dk === today;
+      const isCollegue = state.colleagueDays.has(dk);
+
+      const bar = document.createElement('div');
+      bar.className = 'tl-day';
+      if (isRtt) bar.className += ' tl-rtt';
+      else if (isFerie) bar.className += ' tl-ferie';
+      else if (isBlock) bar.className += ' tl-block';
+      else if (we) bar.className += ' tl-weekend';
+      else if (isVac) bar.className += ' tl-vacances';
+      if (isToday) bar.className += ' tl-today';
+      if (isCollegue && !isRtt) bar.style.boxShadow = '0 0 4px var(--neon-pink), inset 0 0 0 1px var(--neon-pink)';
+
+      let tipText = `${d}/${m+1}`;
+      if (isFerie) tipText += ` - ${holidayMap[dk]}`;
+      else if (isRtt) tipText += ' - RTT';
+      else if (isBlock) tipText += ' - Bloc vacances';
+      if (isCollegue) tipText += ' [coll\u00e8gue]';
+
+      const tip = document.createElement('span');
+      tip.className = 'tl-tip';
+      tip.textContent = tipText;
+      bar.appendChild(tip);
+
+      daysContainer.appendChild(bar);
+    }
+
+    monthDiv.appendChild(daysContainer);
+    el.appendChild(monthDiv);
+  }
+}
+
+// ============================================================
+// TEAM MODE
+// ============================================================
+let teamMembers = []; // [{name, rttDays: Set}]
+
+const TEAM_COLORS = ['var(--neon-cyan)', 'var(--neon-pink)', 'var(--neon-orange)', 'var(--neon-yellow)'];
+
+function addTeamMember() {
+  const input = document.getElementById('teamNameInput');
+  const name = input.value.trim().substring(0, 30);
+  if (!name) { showToast('Entrez un nom !'); return; }
+  if (teamMembers.length >= 4) { showToast('4 membres max !'); return; }
+  if (teamMembers.some(m => m.name === name)) { showToast('Nom d\u00e9j\u00e0 utilis\u00e9 !'); return; }
+
+  teamMembers.push({ name, rttDays: new Set() });
+  input.value = '';
+  optimizeTeamAll();
+  renderTeam();
+}
+
+function removeTeamMemberByIdx(idx) {
+  teamMembers.splice(parseInt(idx), 1);
+  if (teamMembers.length > 0) optimizeTeamAll();
+  renderTeam();
+}
+
+// Draft algorithm: distribute bridges across all members simultaneously
+function optimizeTeamAll() {
+  const bridges = findBridgeOpportunities(state.year, state.region);
+  const holidays = getPublicHolidays(state.year, state.region);
+  const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+  const n = teamMembers.length;
+  if (n === 0) return;
+
+  // Reset all members
+  const members = teamMembers.map(m => ({ name: m.name, used: new Set(), rttLeft: state.rttTotal }));
+
+  // Pass 1: Round-robin draft — pick bridges without full-team conflicts
+  let changed = true;
+  while (changed) {
+    changed = false;
+    for (let i = 0; i < n; i++) {
+      if (members[i].rttLeft <= 0) continue;
+
+      for (const bridge of bridges) {
+        if (bridge.rttDays.length > members[i].rttLeft) continue;
+        const keys = bridge.rttDays.map(d => dateKey(d));
+        if (!keys.every(k => !members[i].used.has(k))) continue;
+
+        const wouldConflict = keys.some(k => {
+          const othersOff = members.filter((m, j) => j !== i && m.used.has(k)).length;
+          return othersOff >= n - 1;
+        });
+
+        if (!wouldConflict) {
+          keys.forEach(k => members[i].used.add(k));
+          members[i].rttLeft -= bridge.rttDays.length;
+          changed = true;
+          break;
+        }
+      }
+    }
+  }
+
+  // Pass 2: fill remaining with Mondays/Fridays (long weekends, no conflict)
+  const minDate = getMinDate(state.year);
+  for (let i = 0; i < n; i++) {
+    if (members[i].rttLeft <= 0) continue;
+
+    // Collect all days already used by everyone
+    const allUsed = new Map();
+    members.forEach((m, j) => {
+      if (j === i) return;
+      for (const dk of m.used) allUsed.set(dk, (allUsed.get(dk) || 0) + 1);
+    });
+
+    // Find Mondays/Fridays that don't create full conflicts
+    const candidates = [];
+    for (let m = 0; m < 12; m++) {
+      for (let d = 1; d <= 31; d++) {
+        const date = new Date(state.year, m, d);
+        if (date.getMonth() !== m) break;
+        if (date < minDate) continue;
+        const dk = dateKey(date);
+        const dow = date.getDay();
+        if (dow !== 1 && dow !== 5) continue; // only Mon/Fri
+        if (isWeekend(date) || holidayKeys.has(dk)) continue;
+        if (members[i].used.has(dk)) continue;
+        const othersOff = allUsed.get(dk) || 0;
+        if (othersOff >= n - 1) continue; // would be full conflict
+        candidates.push({ dk, othersOff });
+      }
+    }
+    // Prefer days with least overlap
+    candidates.sort((a, b) => a.othersOff - b.othersOff);
+    for (const c of candidates) {
+      if (members[i].rttLeft <= 0) break;
+      members[i].used.add(c.dk);
+      members[i].rttLeft--;
+    }
+  }
+
+  // Pass 3: last resort — fill from bridges even with conflicts
+  for (let i = 0; i < n; i++) {
+    if (members[i].rttLeft <= 0) continue;
+    for (const bridge of bridges) {
+      if (members[i].rttLeft <= 0) break;
+      if (bridge.rttDays.length > members[i].rttLeft) continue;
+      const keys = bridge.rttDays.map(d => dateKey(d));
+      if (keys.every(k => !members[i].used.has(k))) {
+        keys.forEach(k => members[i].used.add(k));
+        members[i].rttLeft -= bridge.rttDays.length;
+      }
+    }
+  }
+
+  // Apply results
+  members.forEach((m, i) => { teamMembers[i].rttDays = m.used; });
+}
+
+function renderTeam() {
+  const listEl = document.getElementById('teamList');
+  const resultEl = document.getElementById('teamResult');
+  const legendEl = document.getElementById('teamLegend');
+
+  // Update legend
+  if (teamMembers.length === 0) {
+    legendEl.style.display = 'none';
+    listEl.innerHTML = '<div style="color:var(--text-dim);text-align:center;padding:8px;">Ajoutez des membres pour optimiser en \u00e9quipe</div>';
+    resultEl.innerHTML = '';
+    return;
+  }
+
+  legendEl.style.display = 'flex';
+  teamMembers.forEach((m, i) => {
+    const span = document.getElementById(`teamLeg${i}`);
+    const item = document.getElementById(`teamLegItem${i}`);
+    if (span) span.textContent = escapeHtml(m.name);
+    if (item) item.style.display = '';
+  });
+  // Hide unused legend slots
+  for (let i = teamMembers.length; i < 4; i++) {
+    const item = document.getElementById(`teamLegItem${i}`);
+    if (item) item.style.display = 'none';
+  }
+
+  // Render members
+  let html = '';
+  teamMembers.forEach((m, i) => {
+    const colorClass = `team-colors-${i % 4}`;
+    const dates = [...m.rttDays].sort();
+    const dateStr = dates.map(dk => {
+      const p = dk.split('-');
+      return `${p[2]}/${p[1]}`;
+    }).join(', ');
+
+    const safeName = escapeHtml(m.name);
+    html += `<div class="team-member ${colorClass}">
+      <div>
+        <span class="tm-name">${safeName}</span>
+        <span class="tm-dates">${dates.length} RTT : ${dateStr}</span>
+      </div>
+      <button class="tm-remove" data-member-idx="${i}" onclick="removeTeamMemberByIdx(this.dataset.memberIdx)">X</button>
+    </div>`;
+  });
+  listEl.innerHTML = html;
+
+  // Check conflicts (all members off same day = nobody present)
+  const dayCounts = new Map();
+  for (const m of teamMembers) {
+    for (const dk of m.rttDays) {
+      dayCounts.set(dk, (dayCounts.get(dk) || 0) + 1);
+    }
+  }
+
+  const conflicts = [];
+  for (const [dk, count] of dayCounts) {
+    if (count === teamMembers.length && teamMembers.length > 1) {
+      const p = dk.split('-');
+      conflicts.push(`${p[2]}/${p[1]}`);
+    }
+  }
+
+  // Also count overlap stats
+  let overlapDays = 0;
+  for (const [dk, count] of dayCounts) {
+    if (count > 1) overlapDays++;
+  }
+
+  let resultHtml = '';
+  if (conflicts.length > 0) {
+    resultHtml += `<div class="team-conflict">[!!] Personne au travail le : ${conflicts.join(', ')}</div>`;
+  }
+  if (overlapDays > 0 && teamMembers.length > 1) {
+    const overlapPct = Math.round(overlapDays / dayCounts.size * 100);
+    resultHtml += `<div class="team-conflict" style="border-color:var(--neon-orange);color:var(--neon-orange);background:rgba(255,149,0,0.08);margin-top:6px">[!!] ${overlapDays} jour${overlapDays > 1 ? 's' : ''} avec 2+ absents (${overlapPct}% de chevauchement)</div>`;
+  }
+  if (conflicts.length === 0 && teamMembers.length > 1) {
+    resultHtml += `<div class="team-ok">[OK] Au moins 1 personne au travail chaque jour.</div>`;
+  }
+  resultEl.innerHTML = resultHtml;
+}
+
+// ============================================================
+// EXPORT / SHARE
+// ============================================================
+function exportICal() {
+  if (state.rttDays.size === 0) { showToast('Posez des RTT d\'abord !'); return; }
+
+  let ical = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//PontOptimizer3000//FR\nCALSCALE:GREGORIAN\n';
+
+  for (const dk of state.rttDays) {
+    const parts = dk.split('-');
+    const dateStr = parts.join('');
+    const nextDay = addDays(new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2])), 1);
+    const endStr = `${nextDay.getFullYear()}${String(nextDay.getMonth()+1).padStart(2,'0')}${String(nextDay.getDate()).padStart(2,'0')}`;
+    ical += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${dateStr}\nDTEND;VALUE=DATE:${endStr}\nSUMMARY:RTT\nDESCRIPTION:RTT pose via Pont Optimizer 3000\nEND:VEVENT\n`;
+  }
+
+  const holidays = getPublicHolidays(state.year, state.region);
+  for (const h of holidays) {
+    const dk = dateKey(h.date);
+    const parts = dk.split('-');
+    const dateStr = parts.join('');
+    const nextDay = addDays(h.date, 1);
+    const endStr = `${nextDay.getFullYear()}${String(nextDay.getMonth()+1).padStart(2,'0')}${String(nextDay.getDate()).padStart(2,'0')}`;
+    ical += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${dateStr}\nDTEND;VALUE=DATE:${endStr}\nSUMMARY:${h.name} (f\u00e9ri\u00e9)\nEND:VEVENT\n`;
+  }
+
+  ical += 'END:VCALENDAR';
+
+  const blob = new Blob([ical], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `rtt-plan-${state.year}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Fichier iCal t\u00e9l\u00e9charg\u00e9 !');
+}
+
+function shareConges() {
+  if (state.rttDays.size === 0) { showToast('Posez des RTT d\'abord !'); return; }
+
+  const { totalDaysOff, ratio } = calculateScore();
+  const dayNames = ['Dim','Lun','Mar','Mer','Jeu','Ven','Sam'];
+  const monthNames = ['jan','fev','mar','avr','mai','jun','jul','aou','sep','oct','nov','dec'];
+  const bridges = findBridgeOpportunities(state.year, state.region);
+
+  const sortedDays = [...state.rttDays].sort();
+  const lines = sortedDays.map(dk => {
+    const p = dk.split('-');
+    const d = new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2]));
+    const dow = dayNames[d.getDay()];
+    const label = `${dow} ${d.getDate()} ${monthNames[d.getMonth()]} ${state.year}`;
+    const bridge = bridges.find(b => b.rttDays.some(bd => dateKey(bd) === dk));
+    const reason = bridge ? `> ${bridge.label}` : '';
+    return `  - ${label} ${reason}`;
+  });
+
+  let text = `Mes RTT ${state.year}\n`;
+  text += `${state.rttDays.size} RTT pos\u00e9s > ${totalDaysOff} jours off (ratio x${ratio})\n\n`;
+  text += lines.join('\n');
+  text += `\n\n--\nOptimis\u00e9 avec Pont Optimizer 3000`;
+
+  const params = new URLSearchParams();
+  params.set('y', state.year);
+  params.set('r', state.rttTotal);
+  params.set('reg', state.region);
+  if (state.zone) params.set('z', state.zone);
+  params.set('d', sortedDays.join(','));
+  const url = window.location.origin + window.location.pathname + '?' + params.toString();
+  text += `\n${url}`;
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('RTT copi\u00e9s dans le presse-papier !');
+  }).catch(() => {
+    prompt('Copiez ce texte :', text);
+  });
+}
+
+function shareSite() {
+  const text = `Pont Optimizer 3000 — Maximise tes jours off avec le minimum de RTT !\n${window.location.origin}${window.location.pathname}`;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('Lien du site copi\u00e9 !');
+  }).catch(() => {
+    prompt('Copiez ce lien :', window.location.origin + window.location.pathname);
+  });
+}
+
+function updateUrl() {
+  const params = new URLSearchParams();
+  params.set('y', state.year);
+  params.set('r', state.rttTotal);
+  params.set('reg', state.region);
+  if (state.zone) params.set('z', state.zone);
+  if (state.rttDays.size > 0) {
+    params.set('d', [...state.rttDays].sort().join(','));
+  }
+  history.replaceState(null, '', '?' + params.toString());
+}
+
+function loadFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('y')) {
+    const y = parseInt(params.get('y'));
+    if (y >= 2000 && y <= 2100) state.year = y;
+  }
+  if (params.has('r')) {
+    const r = parseInt(params.get('r'));
+    if (r >= 0 && r <= 30) state.rttTotal = r;
+  }
+  if (params.has('reg')) {
+    const reg = params.get('reg');
+    if (VALID_REGIONS.includes(reg)) state.region = reg;
+  }
+  if (params.has('z')) {
+    const z = params.get('z');
+    if (['A','B','C'].includes(z)) state.zone = z;
+  }
+  if (params.has('d')) {
+    const days = params.get('d').split(',').filter(dk => isValidDateKey(dk));
+    state.rttDays = new Set(days);
+    state.strategy = 'custom';
+  }
+}
+
+function resetAll() {
+  state.rttDays.clear();
+  state.colleagueDays.clear();
+  state.strategy = 'rat';
+  render();
+  applyStrategy('rat');
+  showToast('Reset effectu\u00e9 !');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ============================================================
+// STARS
+// ============================================================
+function createStars() {
+  const container = document.getElementById('stars');
+  for (let i = 0; i < 80; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.setProperty('--dur', (1 + Math.random() * 3) + 's');
+    star.style.animationDelay = Math.random() * 3 + 's';
+    if (Math.random() > 0.7) {
+      star.style.width = '3px';
+      star.style.height = '3px';
+    }
+    container.appendChild(star);
+  }
+}
+
+// ============================================================
+// IMPORT DATES
+// ============================================================
+function importDates(type) {
+  const text = document.getElementById('importText').value.trim();
+  if (!text) { showToast('Collez des dates !'); return; }
+
+  const holidays = getPublicHolidays(state.year, state.region);
+  const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+
+  const parsed = [];
+  // Split on commas, newlines, semicolons, spaces
+  const tokens = text.split(/[,;\n\s]+/).map(t => t.trim()).filter(Boolean);
+
+  for (const token of tokens) {
+    // Only accept DD/MM/YYYY format
+    const m = token.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (!m) continue;
+
+    const date = new Date(parseInt(m[3]), parseInt(m[2]) - 1, parseInt(m[1]));
+    if (isNaN(date.getTime()) || date.getFullYear() !== state.year) continue;
+
+    const dk = dateKey(date);
+    if (!isWeekend(date) && !holidayKeys.has(dk)) {
+      parsed.push(dk);
+    }
+  }
+
+  if (parsed.length === 0) {
+    document.getElementById('importResult').textContent = 'Aucune date valide trouv\u00e9e';
+    return;
+  }
+
+  let added = 0;
+  for (const dk of parsed) {
+    if (state.rttDays.size >= state.rttTotal) break;
+    if (!state.rttDays.has(dk)) {
+      state.rttDays.add(dk);
+      added++;
+    }
+  }
+
+  state.strategy = 'custom';
+  document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === 'custom'));
+  document.getElementById('btnOptimize').style.display = '';
+  render();
+
+  document.getElementById('importResult').textContent = `${added} RTT import\u00e9s`;
+  document.getElementById('importText').value = '';
+  showToast(`${added} RTT import\u00e9s`);
+}
+
+// ============================================================
+// COMPARE COLLEGUE
+// ============================================================
+function loadCollegue() {
+  const input = document.getElementById('collegueUrl').value.trim();
+  if (!input) { showToast('Collez un lien !'); return; }
+
+  let params;
+  try {
+    const url = new URL(input.startsWith('http') ? input : 'https://x.com?' + input);
+    params = new URLSearchParams(url.search);
+  } catch {
+    showToast('Lien invalide !');
+    return;
+  }
+
+  const days = new Set();
+  if (params.has('d')) {
+    params.get('d').split(',').filter(dk => isValidDateKey(dk)).forEach(dk => days.add(dk));
+  }
+
+  if (days.size === 0) {
+    showToast('Aucun jour trouv\u00e9 dans le lien');
+    return;
+  }
+
+  state.colleagueDays = days;
+  render();
+
+  // Show overlap stats
+  const myDays = state.rttDays;
+  let overlap = 0;
+  for (const dk of days) {
+    if (myDays.has(dk)) overlap++;
+  }
+
+  const el = document.getElementById('collegueResult');
+  el.innerHTML = `<span style="color:var(--neon-cyan)">${days.size} jours du coll\u00e8gue charg\u00e9s.</span>` +
+    (overlap > 0 ? ` <span style="color:var(--neon-pink)">${overlap} jour${overlap > 1 ? 's' : ''} en commun !</span>` :
+    ` <span style="color:var(--neon-green)">Aucun chevauchement.</span>`);
+
+  showToast(`${days.size} jours du coll\u00e8gue charg\u00e9s`);
+}
+
+function clearCollegue() {
+  state.colleagueDays.clear();
+  document.getElementById('collegueUrl').value = '';
+  document.getElementById('collegueResult').innerHTML = '';
+  render();
+  showToast('Coll\u00e8gue retir\u00e9');
+}
+
+// ============================================================
+// ACHIEVEMENTS
+// ============================================================
+const BADGES = [
+  { id: 'bridge_master', icon: '=', name: 'PONT MASTER', desc: 'Poser 5+ ponts', check: (s) => s.rttUsed >= 5 },
+  { id: 'rat_supreme', icon: '$', name: 'RAT SUPREME', desc: 'Ratio x3+', check: (s) => parseFloat(s.ratio) >= 3 },
+  { id: 'full_send', icon: '>>', name: 'FULL SEND', desc: 'Utiliser tous ses RTT', check: (s) => s.rttUsed === state.rttTotal && state.rttTotal > 0 },
+  { id: 'megabridge', icon: '##', name: 'MEGA PONT', desc: '9+ jours off d\'affil\u00e9e', check: () => {
+    const allOff = new Set();
+    const holidays = getPublicHolidays(state.year, state.region);
+    const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+    for (let m = 0; m < 12; m++) {
+      for (let d = 1; d <= 31; d++) {
+        const date = new Date(state.year, m, d);
+        if (date.getMonth() !== m) break;
+        const dk = dateKey(date);
+        if (isWeekend(date) || holidayKeys.has(dk) || state.rttDays.has(dk)) allOff.add(dk);
+      }
+    }
+    // Find longest streak
+    let maxStreak = 0, streak = 0;
+    const startDate = new Date(state.year, 0, 1);
+    for (let i = 0; i < 366; i++) {
+      const d = addDays(startDate, i);
+      if (d.getFullYear() !== state.year) break;
+      if (allOff.has(dateKey(d))) { streak++; maxStreak = Math.max(maxStreak, streak); }
+      else streak = 0;
+    }
+    return maxStreak >= 9;
+  }},
+  { id: 'summer_vibes', icon: '*', name: 'SUMMER VIBES', desc: 'RTT en juillet ou ao\u00fbt', check: () => {
+    for (const dk of state.rttDays) {
+      const m = parseInt(dk.split('-')[1]);
+      if (m === 7 || m === 8) return true;
+    }
+    return false;
+  }},
+  { id: 'team_player', icon: '++', name: 'TEAM PLAYER', desc: 'Utiliser le mode \u00e9quipe', check: () => teamMembers.length >= 2 },
+];
+
+function renderAchievements() {
+  const grid = document.getElementById('badgeGrid');
+  const score = getCachedScore();
+
+  let html = '';
+  for (const badge of BADGES) {
+    const unlocked = badge.check(score);
+    html += `<div class="badge${unlocked ? ' unlocked' : ''}">
+      <div class="badge-icon">${badge.icon}</div>
+      <div class="badge-name">${badge.name}</div>
+      <div class="badge-desc">${badge.desc}</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+// ============================================================
+// MARQUEE
+// ============================================================
+function formatBridgeDates(bridge) {
+  const days = bridge.rttDays.map(d => {
+    const dd = d.getDate();
+    const mm = d.getMonth() + 1;
+    return `${dd}/${mm}`;
+  });
+  if (days.length === 1) return days[0];
+  return `${days[0]}-${days[days.length - 1]}`;
+}
+
+function updateMarquee() {
+  const bridges = findBridgeOpportunities(state.year, state.region);
+  const best = bridges.slice(0, 5);
+  const text = best.map(b => `// ${b.label} [${formatBridgeDates(b)}] (${b.rttDays.length} RTT > ${b.daysOff}j off)`).join('     ');
+  document.getElementById('marquee').textContent = text;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+function init() {
+  createStars();
+
+  loadFromUrl();
+
+  const yearSelect = document.getElementById('yearSelect');
+  const currentYear = new Date().getFullYear();
+  const startYear = Math.min(state.year, currentYear);
+  for (let y = startYear; y <= currentYear + 10; y++) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    if (y === state.year) opt.selected = true;
+    yearSelect.appendChild(opt);
+  }
+
+  document.getElementById('yearSelect').value = state.year;
+  document.getElementById('rttInput').value = state.rttTotal;
+  document.getElementById('regionSelect').value = state.region;
+  document.getElementById('zoneSelect').value = state.zone;
+
+  // Print date attribute
+  const now2 = new Date();
+  document.querySelector('header').setAttribute('data-print-date',
+    `${now2.getDate()}/${now2.getMonth()+1}/${now2.getFullYear()}`);
+
+  yearSelect.addEventListener('change', () => {
+    state.year = parseInt(yearSelect.value);
+    state.rttDays.clear();
+    applyStrategy(state.strategy);
+  });
+
+  document.getElementById('rttInput').addEventListener('change', (e) => {
+    state.rttTotal = parseInt(e.target.value) || 0;
+    if (state.strategy !== 'custom') applyStrategy(state.strategy);
+    else render();
+  });
+
+  document.getElementById('regionSelect').addEventListener('change', (e) => {
+    state.region = e.target.value;
+    state.rttDays.clear();
+    applyStrategy(state.strategy);
+  });
+
+  document.getElementById('zoneSelect').addEventListener('change', (e) => {
+    state.zone = e.target.value;
+    render();
+  });
+
+  if (!window.location.search.includes('d=')) {
+    applyStrategy('rat');
+  } else {
+    document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === state.strategy));
+    document.getElementById('btnOptimize').style.display = (state.strategy === 'custom') ? '' : 'none';
+    render();
+  }
+
+  updateMarquee();
+  setInterval(renderCountdown, 60000);
+}
+
+init();
+</script>
+</body>
+</html>
