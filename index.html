@@ -2888,18 +2888,22 @@ function updateCommunityCounter() {
 // KONAMI CODE EASTER EGG
 // ============================================================
 function initKonamiCode() {
-  const secret = 'rtt';
-  let buf = '';
+  // Secret: ↑ r t t
+  const sequence = ['ArrowUp', 'r', 't', 't'];
+  let pos = 0;
   document.addEventListener('keydown', (e) => {
     if (document.getElementById('excelMode')) return;
-    // Skip if user is typing in an input field
     const tag = (e.target.tagName || '').toLowerCase();
     if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
-    buf += e.key.toLowerCase();
-    if (buf.length > secret.length) buf = buf.slice(-secret.length);
-    if (buf === secret) {
-      buf = '';
-      activateExcelMode();
+    const key = e.key === 'ArrowUp' ? 'ArrowUp' : e.key.toLowerCase();
+    if (key === sequence[pos]) {
+      pos++;
+      if (pos === sequence.length) {
+        pos = 0;
+        activateExcelMode();
+      }
+    } else {
+      pos = 0;
     }
   });
 }
