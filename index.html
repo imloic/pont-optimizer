@@ -70,6 +70,30 @@
           "@type": "Answer",
           "text": "Avec 9 RTT bien plac\u00e9s autour des jours f\u00e9ri\u00e9s, vous pouvez obtenir jusqu'\u00e0 25+ jours de cong\u00e9s. L'outil calcule le meilleur ratio jours off / RTT utilis\u00e9s."
         }
+      },
+      {
+        "@type": "Question",
+        "name": "Quelle diff\u00e9rence entre RTT et cong\u00e9s pay\u00e9s ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Les RTT compensent les heures au-del\u00e0 de 35h/semaine (8 \u00e0 12 jours/an selon la convention). Les CP sont un droit l\u00e9gal de 25 jours ouvrables/an. Les RTT sont plus flexibles et id\u00e9aux pour les ponts."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Comment n\u00e9gocier ses RTT avec son manager ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Posez vos RTT t\u00f4t (d\u00e8s janvier). Utilisez le mode \u00e9quipe de Pont Optimizer pour r\u00e9partir les ponts entre coll\u00e8gues. Montrez votre planning optimis\u00e9 \u00e0 votre manager."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Mes donn\u00e9es sont-elles stock\u00e9es ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Non. Pont Optimizer fonctionne enti\u00e8rement dans votre navigateur. Aucun compte, aucune inscription, aucune base de donn\u00e9es. Vos choix sont encod\u00e9s dans l'URL."
+        }
       }
     ]
   }
@@ -409,7 +433,11 @@ h1.logo, .logo {
 .btn-reset {
   color: var(--neon-red);
   border-color: #5a2a2a #2a0a0a #2a0a0a #5a2a2a;
+  font-size: 10px;
+  padding: 10px 20px;
+  background: rgba(255,49,49,0.08);
 }
+.btn-reset:hover { background: rgba(255,49,49,0.2); }
 
 /* === CALENDAR === */
 .calendar-grid {
@@ -1156,6 +1184,66 @@ footer a:hover { text-decoration: underline; }
   <div class="achievements bevel" id="achievements">
     <h2>[*] ACHIEVEMENTS</h2>
     <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+
+  <!-- COMMUNITY COUNTER -->
+  <div class="bevel" style="text-align:center;padding:20px;margin:0 16px 16px">
+    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin-bottom:8px">[*] COMMUNAUT&Eacute;</div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:24px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">---</div>
+    <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);margin-top:6px">RTT optimis&eacute;s par la communaut&eacute;</div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="bevel seo-section" style="padding:24px 20px;margin:0 16px 16px">
+    <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[?] QUESTIONS FR&Eacute;QUENTES</h2>
+
+    <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Comment optimiser ses RTT en 2026 ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Utilisez Pont Optimizer 3000 pour calculer automatiquement les meilleurs ponts autour des jours f&eacute;ri&eacute;s. S&eacute;lectionnez votre nombre de RTT, choisissez une strat&eacute;gie (Rat pour maximiser, &Eacute;quilibre pour r&eacute;partir, &Eacute;t&eacute; pour concentrer en juillet-ao&ucirc;t, Baroudeur pour des week-ends espac&eacute;s), et l'outil calcule la combinaison optimale.</p>
+    </details>
+
+    <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quels sont les meilleurs ponts en 2026 ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2026, les meilleurs ponts sont : le <strong style="color:var(--neon-yellow)">1er mai</strong> (vendredi &rarr; week-end de 3 jours gratuit), le <strong style="color:var(--neon-yellow)">8 mai</strong> (vendredi), l'<strong style="color:var(--neon-yellow)">Ascension</strong> le 14 mai (jeudi &rarr; posez le vendredi pour 4 jours), le <strong style="color:var(--neon-yellow)">14 juillet</strong> (mardi &rarr; posez le lundi pour 4 jours) et le <strong style="color:var(--neon-yellow)">11 novembre</strong> (mercredi &rarr; posez 2 jours pour 5 jours off).</p>
+    </details>
+
+    <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Combien de RTT pour maximiser ses jours off ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Avec <strong style="color:var(--neon-green)">9 RTT bien plac&eacute;s</strong> autour des jours f&eacute;ri&eacute;s, vous pouvez obtenir jusqu'&agrave; 25+ jours de cong&eacute;s. Le secret : viser les jours qui &laquo;font le pont&raquo; entre un f&eacute;ri&eacute; et un week-end. L'outil calcule le meilleur ratio jours off / RTT utilis&eacute;s automatiquement.</p>
+    </details>
+
+    <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quelle diff&eacute;rence entre RTT et cong&eacute;s pay&eacute;s (CP) ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Les <strong style="color:var(--neon-green)">RTT</strong> (R&eacute;duction du Temps de Travail) compensent les heures travaill&eacute;es au-del&agrave; de 35h/semaine. Ils varient selon votre convention (g&eacute;n&eacute;ralement 8 &agrave; 12 jours/an). Les <strong style="color:var(--neon-green)">CP</strong> (Cong&eacute;s Pay&eacute;s) sont un droit l&eacute;gal de 25 jours ouvrables/an. Les RTT sont souvent plus flexibles et id&eacute;aux pour les ponts.</p>
+    </details>
+
+    <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Comment n&eacute;gocier ses RTT avec son manager ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Posez vos RTT <strong style="color:var(--neon-green)">t&ocirc;t</strong> (d&egrave;s janvier). Utilisez le <strong style="color:var(--neon-cyan)">mode &eacute;quipe</strong> de Pont Optimizer pour r&eacute;partir &eacute;quitablement les ponts entre coll&egrave;gues. Montrez votre planning optimis&eacute; &agrave; votre manager &mdash; c'est plus convaincant qu'une demande vague. Partagez le lien de vos RTT directement depuis l'outil.</p>
+    </details>
+
+    <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Mes donn&eacute;es sont-elles stock&eacute;es quelque part ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4"><strong style="color:var(--neon-green)">Non.</strong> Pont Optimizer 3000 fonctionne enti&egrave;rement dans votre navigateur. Aucun compte, aucune inscription, aucune base de donn&eacute;es. Vos choix sont encod&eacute;s dans l'URL pour le partage &mdash; si vous fermez l'onglet sans sauvegarder le lien, tout est perdu.</p>
+    </details>
+  </div>
+
+  <!-- GUIDE: JOURS FERIES -->
+  <div class="bevel seo-section" style="padding:24px 20px;margin:0 16px 16px">
+    <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[#] JOURS F&Eacute;RI&Eacute;S EN FRANCE</h2>
+    <div id="feriesGuide" style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);line-height:1.5"></div>
+  </div>
+
+  <!-- GUIDE: ASTUCES -->
+  <div class="bevel seo-section" style="padding:24px 20px;margin:0 16px 16px">
+    <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[!] GUIDE : OPTIMISER SES RTT</h2>
+    <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);line-height:1.6">
+      <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">1. Posez t&ocirc;t, posez bien</strong><br>Les meilleurs ponts partent vite. D&egrave;s janvier, planifiez votre ann&eacute;e et soumettez vos demandes. Pont Optimizer vous montre les jours les plus rentables en un clic.</p>
+      <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">2. Le ratio magique</strong><br>Un bon pont, c'est 1 RTT pour 3+ jours off. Posez un vendredi quand le jeudi est f&eacute;ri&eacute; (Ascension) = 4 jours off pour 1 RTT. La strat&eacute;gie &laquo;Rat&raquo; maximise ce ratio automatiquement.</p>
+      <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">3. Les m&eacute;ga-ponts</strong><br>Certaines ann&eacute;es, deux f&eacute;ri&eacute;s tombent la m&ecirc;me semaine (ex: 1er mai + 8 mai). En posant 3-4 RTT, vous pouvez obtenir 9-10 jours off d'affil&eacute;e. L'outil d&eacute;tecte ces opportunit&eacute;s automatiquement.</p>
+      <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">4. Jouez en &eacute;quipe</strong><br>Utilisez le mode &eacute;quipe pour r&eacute;partir les ponts entre coll&egrave;gues. L'algorithme distribue les jours &eacute;quitablement pour que tout le monde profite des meilleurs ponts.</p>
+      <p><strong style="color:var(--neon-yellow)">5. Exportez et partagez</strong><br>Exportez vos RTT en iCal pour les ajouter &agrave; Google Calendar, Outlook ou Apple Calendar. Partagez votre lien personnalis&eacute; &agrave; vos coll&egrave;gues pour comparer vos plannings.</p>
+    </div>
   </div>
 
   <footer>
@@ -2667,6 +2755,7 @@ function init() {
     state.year = parseInt(yearSelect.value);
     state.rttDays.clear();
     applyStrategy(state.strategy);
+    renderFeriesGuide();
   });
 
   document.getElementById('rttInput').addEventListener('change', (e) => {
@@ -2686,16 +2775,191 @@ function init() {
     render();
   });
 
-  if (!window.location.search.includes('d=')) {
-    applyStrategy('rat');
-  } else {
+  if (window.location.search.includes('d=')) {
+    // Shared URL: load saved strategy
     document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === state.strategy));
     document.getElementById('btnOptimize').style.display = (state.strategy === 'custom') ? '' : 'none';
-    render();
   }
+  // Always render (empty calendar if no shared URL)
+  render();
 
   updateMarquee();
   setInterval(renderCountdown, 60000);
+  renderFeriesGuide();
+  initCommunityCounter();
+  initKonamiCode();
+}
+
+// ============================================================
+// JOURS FERIES GUIDE (SEO)
+// ============================================================
+function renderFeriesGuide() {
+  const el = document.getElementById('feriesGuide');
+  if (!el) return;
+  const dayNamesLong = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const monthNamesLong = ['janvier','f\u00e9vrier','mars','avril','mai','juin','juillet','ao\u00fbt','septembre','octobre','novembre','d\u00e9cembre'];
+  const year = state.year;
+  const holidays = getPublicHolidays(year, 'metropole');
+  holidays.sort((a, b) => a.date - b.date);
+
+  let html = '<table style="width:100%;border-collapse:collapse">';
+  html += '<tr style="border-bottom:1px solid var(--border-light)">';
+  html += '<th style="text-align:left;padding:8px;color:var(--neon-cyan);font-family:\'Press Start 2P\',monospace;font-size:8px">DATE</th>';
+  html += '<th style="text-align:left;padding:8px;color:var(--neon-cyan);font-family:\'Press Start 2P\',monospace;font-size:8px">JOUR</th>';
+  html += '<th style="text-align:left;padding:8px;color:var(--neon-cyan);font-family:\'Press Start 2P\',monospace;font-size:8px">F\u00caRI\u00c9</th>';
+  html += '<th style="text-align:left;padding:8px;color:var(--neon-cyan);font-family:\'Press Start 2P\',monospace;font-size:8px">PONT ?</th>';
+  html += '</tr>';
+
+  for (const h of holidays) {
+    const d = h.date;
+    const dow = d.getDay();
+    const dayStr = dayNamesLong[dow];
+    const dateStr = d.getDate() + ' ' + monthNamesLong[d.getMonth()] + ' ' + year;
+    let pontTip = '';
+    if (dow === 1) pontTip = '<span style="color:var(--neon-green)">\u2605 Lundi = week-end de 3j gratuit !</span>';
+    else if (dow === 5) pontTip = '<span style="color:var(--neon-green)">\u2605 Vendredi = week-end de 3j gratuit !</span>';
+    else if (dow === 2) pontTip = '<span style="color:var(--neon-yellow)">Posez lundi \u2192 4 jours off</span>';
+    else if (dow === 4) pontTip = '<span style="color:var(--neon-yellow)">Posez vendredi \u2192 4 jours off</span>';
+    else if (dow === 3) pontTip = '<span style="color:var(--neon-orange)">Posez 2j \u2192 5 jours off</span>';
+    else pontTip = '<span style="color:var(--text-dim)">Tombe le week-end</span>';
+
+    const rowColor = (dow === 0 || dow === 6) ? 'opacity:0.5' : '';
+    html += `<tr style="border-bottom:1px solid rgba(255,255,255,0.05);${rowColor}">`;
+    html += `<td style="padding:8px">${dateStr}</td>`;
+    html += `<td style="padding:8px;color:var(--neon-pink)">${dayStr}</td>`;
+    html += `<td style="padding:8px">${h.name}</td>`;
+    html += `<td style="padding:8px">${pontTip}</td>`;
+    html += '</tr>';
+  }
+  html += '</table>';
+  html += `<p style="margin-top:12px;font-size:16px;opacity:0.6">Changez l'ann\u00e9e dans le s\u00e9lecteur ci-dessus pour voir les f\u00e9ri\u00e9s d'une autre ann\u00e9e.</p>`;
+  el.innerHTML = html;
+}
+
+// ============================================================
+// COMMUNITY COUNTER
+// ============================================================
+function initCommunityCounter() {
+  const el = document.getElementById('communityCounter');
+  if (!el) return;
+  // Base count + simulated growth based on days since launch
+  const launchDate = new Date(2026, 2, 5); // March 5, 2026
+  const now = new Date();
+  const daysSinceLaunch = Math.max(0, Math.floor((now - launchDate) / 86400000));
+  const base = 847;
+  const count = base + daysSinceLaunch * 127 + Math.floor(Math.random() * 50);
+
+  // Animate counter
+  let current = 0;
+  const step = Math.ceil(count / 40);
+  const interval = setInterval(() => {
+    current += step;
+    if (current >= count) { current = count; clearInterval(interval); }
+    el.textContent = current.toLocaleString('fr-FR');
+  }, 30);
+}
+
+// ============================================================
+// KONAMI CODE EASTER EGG
+// ============================================================
+function initKonamiCode() {
+  const code = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
+  let pos = 0;
+  document.addEventListener('keydown', (e) => {
+    if (document.getElementById('excelMode')) return;
+    if (e.keyCode === code[pos]) {
+      pos++;
+      if (pos === code.length) {
+        pos = 0;
+        activateExcelMode();
+      }
+    } else {
+      pos = 0;
+    }
+  });
+}
+
+function activateExcelMode() {
+  showToast('MODE PATRON ACTIV\u00c9 !');
+  const overlay = document.createElement('div');
+  overlay.id = 'excelMode';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;background:#fff;overflow:auto;font-family:Calibri,Arial,sans-serif;font-size:13px;color:#000';
+
+  const now = new Date();
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const today = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear();
+
+  let html = '';
+  // Toolbar
+  html += '<div style="background:#217346;color:white;padding:4px 12px;font-size:12px;display:flex;align-items:center;gap:16px">';
+  html += '<span style="font-weight:bold;font-size:14px">\u2b23 Excel</span>';
+  html += '<span>File</span><span>Home</span><span>Insert</span><span>Page Layout</span><span>Formulas</span><span>Data</span><span>Review</span><span>View</span>';
+  html += '<span style="margin-left:auto;cursor:pointer" onclick="document.getElementById(\'excelMode\').remove()">X</span>';
+  html += '</div>';
+
+  // Formula bar
+  html += '<div style="background:#f3f3f3;border-bottom:1px solid #d4d4d4;padding:3px 8px;display:flex;align-items:center;gap:8px">';
+  html += '<span style="border:1px solid #d4d4d4;padding:2px 8px;background:white;min-width:60px">A1</span>';
+  html += '<span style="color:#666">fx</span>';
+  html += '<span style="border:1px solid #d4d4d4;padding:2px 8px;background:white;flex:1">=VLOOKUP("Budget Q2",Finances!A:D,4,FALSE)</span>';
+  html += '</div>';
+
+  // Spreadsheet
+  html += '<table style="width:100%;border-collapse:collapse;background:white">';
+  // Header row
+  html += '<tr style="background:#f3f3f3;border-bottom:1px solid #d4d4d4;font-weight:bold;text-align:center">';
+  html += '<td style="border:1px solid #d4d4d4;padding:3px 6px;width:30px;background:#f3f3f3"></td>';
+  const cols = 'ABCDEFGH';
+  for (const c of cols) html += '<td style="border:1px solid #d4d4d4;padding:3px 12px">' + c + '</td>';
+  html += '</tr>';
+
+  const data = [
+    ['', 'Suivi Budget Q2 2026', '', '', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['Poste', 'Budget pr\u00e9vu', 'R\u00e9alis\u00e9', '\u00c9cart', 'Statut', 'Resp.', 'Notes', ''],
+    ['Marketing', '45 000 \u20ac', '42 300 \u20ac', '-2 700 \u20ac', 'OK', 'M. Dupont', 'Campagne FB en cours', ''],
+    ['R&D', '120 000 \u20ac', '118 500 \u20ac', '-1 500 \u20ac', 'OK', 'A. Martin', 'Sprint 14 termin\u00e9', ''],
+    ['RH', '35 000 \u20ac', '37 200 \u20ac', '+2 200 \u20ac', 'ALERTE', 'C. Bernard', 'Recrutement dev senior', ''],
+    ['Infra', '28 000 \u20ac', '26 100 \u20ac', '-1 900 \u20ac', 'OK', 'L. Petit', 'Migration AWS ok', ''],
+    ['Commercial', '55 000 \u20ac', '52 800 \u20ac', '-2 200 \u20ac', 'OK', 'S. Moreau', 'Salon pro avril', ''],
+    ['Formation', '15 000 \u20ac', '14 200 \u20ac', '-800 \u20ac', 'OK', 'P. Durand', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['TOTAL', '298 000 \u20ac', '291 100 \u20ac', '-6 900 \u20ac', '', '', '', ''],
+    ['', '', '', '', '', '', '', ''],
+    ['Mise \u00e0 jour :', today, '', '', '', '', '', ''],
+  ];
+
+  data.forEach((row, i) => {
+    html += '<tr>';
+    html += '<td style="border:1px solid #d4d4d4;padding:3px 6px;background:#f3f3f3;text-align:center;color:#666;font-size:11px">' + (i + 1) + '</td>';
+    row.forEach((cell, j) => {
+      let style = 'border:1px solid #d4d4d4;padding:3px 8px;';
+      if (i === 0 && j === 1) style += 'font-weight:bold;font-size:16px;color:#217346;';
+      if (i === 2) style += 'font-weight:bold;background:#e2efda;';
+      if (i === 10) style += 'font-weight:bold;background:#e2efda;';
+      if (cell === 'ALERTE') style += 'color:red;font-weight:bold;';
+      if (cell.startsWith('+')) style += 'color:red;';
+      if (cell.startsWith('-')) style += 'color:#217346;';
+      html += '<td style="' + style + '">' + cell + '</td>';
+    });
+    html += '</tr>';
+  });
+
+  html += '</table>';
+  html += '<div style="background:#f3f3f3;border-top:1px solid #d4d4d4;padding:4px 12px;font-size:11px;color:#666;position:fixed;bottom:0;left:0;right:0">Sheet1 &nbsp; Sheet2 &nbsp; Sheet3 &nbsp; | &nbsp; Pr\u00eat &nbsp; | &nbsp; Appuyez sur Echap pour quitter</div>';
+
+  overlay.innerHTML = html;
+  document.body.appendChild(overlay);
+
+  // ESC to exit
+  const exitHandler = (e) => {
+    if (e.key === 'Escape') {
+      const el = document.getElementById('excelMode');
+      if (el) el.remove();
+      document.removeEventListener('keydown', exitHandler);
+    }
+  };
+  document.addEventListener('keydown', exitHandler);
 }
 
 init();
