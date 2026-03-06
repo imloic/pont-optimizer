@@ -1194,19 +1194,11 @@ footer a:hover { text-decoration: underline; }
     <div class="badge-grid" id="badgeGrid"></div>
   </div>
 
-  <!-- COMMUNITY + PERSONAL COUNTER -->
+  <!-- COMMUNITY COUNTER -->
   <div class="bevel" style="text-align:center;padding:20px;margin:0 16px 16px;display:none" id="counterWrapper">
     <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin-bottom:12px">[*] COMPTEUR COMMUNAUTAIRE</div>
-    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
-      <div>
-        <div style="font-family:'Press Start 2P',monospace;font-size:22px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">...</div>
-        <div style="font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:4px">visiteurs ont optimis&eacute;</div>
-      </div>
-      <div id="personalCounterBlock" style="display:none">
-        <div style="font-family:'Press Start 2P',monospace;font-size:22px;color:var(--neon-pink);text-shadow:0 0 10px rgba(255,110,199,0.4)" id="personalCounter">0</div>
-        <div style="font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:4px">vos RTT optimis&eacute;s</div>
-      </div>
-    </div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:22px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">...</div>
+    <div style="font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:4px">visiteurs ont optimis&eacute; leurs RTT</div>
   </div>
 
   <!-- FAQ -->
@@ -1270,7 +1262,8 @@ footer a:hover { text-decoration: underline; }
   <footer>
     <p>PONT OPTIMIZER 3000 &mdash; Fait avec &#9829; en France</p>
     <p>Tout calcul&eacute; localement &mdash; Vos donn&eacute;es restent dans votre navigateur</p>
-    <p>Donn&eacute;es : jours f&eacute;ri&eacute;s officiels</p>
+    <p>Donn&eacute;es : jours f&eacute;ri&eacute;s officiels &mdash; D&eacute;lai minimum : 1 mois avant la date pos&eacute;e</p>
+    <p style="font-size:11px;color:var(--text-dim);opacity:0.5;margin-top:4px">Psst... tapez &uarr;RTT pour une surprise</p>
     <div class="social-share">
       <a class="social-btn" onclick="shareTwitter()" title="Partager sur X/Twitter"><span class="ico">[X]</span> TWITTER</a>
       <a class="social-btn" onclick="shareFacebook()" title="Partager sur Facebook"><span class="ico">[f]</span> FACEBOOK</a>
@@ -1514,8 +1507,9 @@ let state = {
 function getMinDate(year) {
   const now = new Date();
   if (year === now.getFullYear()) {
-    // Min 3 weeks ahead — RTT must be requested in advance
-    return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 21);
+    // Min 1 month ahead — RTT must be requested in advance
+    const min = new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    return min;
   }
   if (year < now.getFullYear()) {
     // Past year — block everything
@@ -1769,14 +1763,9 @@ function applyStrategy(name) {
     }
   }
 
-  // Track RTT count for community counter
-  if (state.rttDays.size > 0) {
-    const prev = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
-    localStorage.setItem('po3k_rtt_total', prev + state.rttDays.size);
-    if (typeof _paq !== 'undefined') {
-      _paq.push(['trackEvent', 'Strategy', name, 'RTT', state.rttDays.size]);
-    }
-    updateCommunityCounter();
+  // Track strategy usage in Matomo
+  if (state.rttDays.size > 0 && typeof _paq !== 'undefined') {
+    _paq.push(['trackEvent', 'Strategy', name, 'RTT', state.rttDays.size]);
   }
 
   render();
@@ -2873,22 +2862,6 @@ function renderFeriesGuide() {
 // COMMUNITY COUNTER
 // ============================================================
 function initCommunityCounter() {
-  updatePersonalCounter();
-  fetchCommunityCounter();
-}
-
-function updatePersonalCounter() {
-  const el = document.getElementById('personalCounter');
-  const block = document.getElementById('personalCounterBlock');
-  if (!el || !block) return;
-  const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
-  if (count > 0) {
-    block.style.display = '';
-    el.textContent = count.toLocaleString('fr-FR');
-  }
-}
-
-function fetchCommunityCounter() {
   const wrapper = document.getElementById('counterWrapper');
   const el = document.getElementById('communityCounter');
   if (!el || !wrapper) return;
@@ -2898,23 +2871,16 @@ function fetchCommunityCounter() {
     .then(r => r.json())
     .then(data => {
       const visits = data && data.value ? data.value : 0;
-      if (visits > 0 || parseInt(localStorage.getItem('po3k_rtt_total') || '0') > 0) {
+      if (visits > 0) {
         wrapper.style.display = '';
-        el.textContent = visits > 0 ? visits.toLocaleString('fr-FR') : '...';
+        el.textContent = visits.toLocaleString('fr-FR');
       }
     })
-    .catch(() => {
-      // Fallback: show personal counter only if available
-      const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
-      if (count > 0) {
-        wrapper.style.display = '';
-        el.textContent = '-';
-      }
-    });
+    .catch(() => {});
 }
 
 function updateCommunityCounter() {
-  updatePersonalCounter();
+  initCommunityCounter();
 }
 
 // ============================================================
