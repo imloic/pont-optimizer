@@ -1194,11 +1194,11 @@ footer a:hover { text-decoration: underline; }
     <div class="badge-grid" id="badgeGrid"></div>
   </div>
 
-  <!-- COMMUNITY COUNTER -->
-  <div class="bevel" style="text-align:center;padding:20px;margin:0 16px 16px">
-    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin-bottom:8px">[*] COMMUNAUT&Eacute;</div>
-    <div style="font-family:'Press Start 2P',monospace;font-size:24px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">---</div>
-    <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);margin-top:6px">RTT optimis&eacute;s par la communaut&eacute;</div>
+  <!-- PERSONAL RTT COUNTER -->
+  <div class="bevel" style="text-align:center;padding:20px;margin:0 16px 16px;display:none" id="counterWrapper">
+    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin-bottom:8px">[*] VOS STATS</div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:24px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">0</div>
+    <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);margin-top:6px">RTT optimis&eacute;s depuis votre premi&egrave;re visite</div>
   </div>
 
   <!-- FAQ -->
@@ -2870,45 +2870,36 @@ function initCommunityCounter() {
 
 function updateCommunityCounter() {
   const el = document.getElementById('communityCounter');
-  const wrapper = el ? el.parentElement : null;
+  const wrapper = document.getElementById('counterWrapper');
   if (!el || !wrapper) return;
 
   const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
 
-  // Only show after 500 RTT optimized
-  if (count < 500) {
+  if (count === 0) {
     wrapper.style.display = 'none';
     return;
   }
 
   wrapper.style.display = '';
-
-  // Animate counter
-  let current = 0;
-  const step = Math.ceil(count / 30);
-  const interval = setInterval(() => {
-    current += step;
-    if (current >= count) { current = count; clearInterval(interval); }
-    el.textContent = current.toLocaleString('fr-FR');
-  }, 30);
+  el.textContent = count.toLocaleString('fr-FR');
 }
 
 // ============================================================
 // KONAMI CODE EASTER EGG
 // ============================================================
 function initKonamiCode() {
-  const code = [38,38,40,40,37,39,37,39,66,65]; // up up down down left right left right B A
-  let pos = 0;
+  const secret = 'rtt';
+  let buf = '';
   document.addEventListener('keydown', (e) => {
     if (document.getElementById('excelMode')) return;
-    if (e.keyCode === code[pos]) {
-      pos++;
-      if (pos === code.length) {
-        pos = 0;
-        activateExcelMode();
-      }
-    } else {
-      pos = 0;
+    // Skip if user is typing in an input field
+    const tag = (e.target.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+    buf += e.key.toLowerCase();
+    if (buf.length > secret.length) buf = buf.slice(-secret.length);
+    if (buf === secret) {
+      buf = '';
+      activateExcelMode();
     }
   });
 }
