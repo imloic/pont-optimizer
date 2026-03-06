@@ -1405,8 +1405,8 @@ let state = {
 function getMinDate(year) {
   const now = new Date();
   if (year === now.getFullYear()) {
-    // Min 1 month ahead — RTT must be requested in advance
-    return new Date(now.getFullYear(), now.getMonth() + 1, now.getDate());
+    // Min 3 weeks ahead — RTT must be requested in advance
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate() + 21);
   }
   if (year < now.getFullYear()) {
     // Past year — block everything
