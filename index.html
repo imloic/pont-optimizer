@@ -73,6 +73,14 @@
       },
       {
         "@type": "Question",
+        "name": "Quels sont les meilleurs ponts en 2027 ?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "En 2027 : 1er janvier (vendredi, 3j gratuits), Ascension 6 mai (jeudi, posez vendredi = 4j), 14 juillet (mercredi, posez 2j = 5j), 1er novembre (lundi, 3j gratuits), 11 novembre (jeudi, posez vendredi = 4j). Novembre 2027 offre deux ponts gratuits."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "Quelle diff\u00e9rence entre RTT et cong\u00e9s pay\u00e9s ?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -1213,6 +1221,11 @@ footer a:hover { text-decoration: underline; }
     </details>
 
     <details style="margin-bottom:12px">
+      <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quels sont les meilleurs ponts en 2027 ?</summary>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2027, les meilleurs ponts sont : le <strong style="color:var(--neon-yellow)">1er janvier</strong> (vendredi &rarr; 3 jours gratuits), le <strong style="color:var(--neon-yellow)">1er mai</strong> (samedi, perdu), l'<strong style="color:var(--neon-yellow)">Ascension</strong> le 6 mai (jeudi &rarr; posez vendredi = 4 jours), le <strong style="color:var(--neon-yellow)">14 juillet</strong> (mercredi &rarr; posez 2 jours = 5 jours off), le <strong style="color:var(--neon-yellow)">1er novembre</strong> (lundi &rarr; 3 jours gratuits) et le <strong style="color:var(--neon-yellow)">11 novembre</strong> (jeudi &rarr; posez vendredi = 4 jours). Deux ponts gratuits le m&ecirc;me mois en novembre !</p>
+    </details>
+
+    <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quelle diff&eacute;rence entre RTT et cong&eacute;s pay&eacute;s (CP) ?</summary>
       <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Les <strong style="color:var(--neon-green)">RTT</strong> (R&eacute;duction du Temps de Travail) compensent les heures travaill&eacute;es au-del&agrave; de 35h/semaine. Ils varient selon votre convention (g&eacute;n&eacute;ralement 8 &agrave; 12 jours/an). Les <strong style="color:var(--neon-green)">CP</strong> (Cong&eacute;s Pay&eacute;s) sont un droit l&eacute;gal de 25 jours ouvrables/an. Les RTT sont souvent plus flexibles et id&eacute;aux pour les ponts.</p>
     </details>
@@ -1746,6 +1759,16 @@ function applyStrategy(name) {
       picked.push(c.date);
       left--;
     }
+  }
+
+  // Track RTT count for community counter
+  if (state.rttDays.size > 0) {
+    const prev = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
+    localStorage.setItem('po3k_rtt_total', prev + state.rttDays.size);
+    if (typeof _paq !== 'undefined') {
+      _paq.push(['trackEvent', 'Strategy', name, 'RTT', state.rttDays.size]);
+    }
+    updateCommunityCounter();
   }
 
   render();
@@ -2779,8 +2802,10 @@ function init() {
     // Shared URL: load saved strategy
     document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === state.strategy));
     document.getElementById('btnOptimize').style.display = (state.strategy === 'custom') ? '' : 'none';
+  } else {
+    // Fresh load: no strategy applied, user picks
+    state.strategy = 'custom';
   }
-  // Always render (empty calendar if no shared URL)
   render();
 
   updateMarquee();
@@ -2840,18 +2865,27 @@ function renderFeriesGuide() {
 // COMMUNITY COUNTER
 // ============================================================
 function initCommunityCounter() {
+  updateCommunityCounter();
+}
+
+function updateCommunityCounter() {
   const el = document.getElementById('communityCounter');
-  if (!el) return;
-  // Base count + simulated growth based on days since launch
-  const launchDate = new Date(2026, 2, 5); // March 5, 2026
-  const now = new Date();
-  const daysSinceLaunch = Math.max(0, Math.floor((now - launchDate) / 86400000));
-  const base = 847;
-  const count = base + daysSinceLaunch * 127 + Math.floor(Math.random() * 50);
+  const wrapper = el ? el.parentElement : null;
+  if (!el || !wrapper) return;
+
+  const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
+
+  // Only show after 500 RTT optimized
+  if (count < 500) {
+    wrapper.style.display = 'none';
+    return;
+  }
+
+  wrapper.style.display = '';
 
   // Animate counter
   let current = 0;
-  const step = Math.ceil(count / 40);
+  const step = Math.ceil(count / 30);
   const interval = setInterval(() => {
     current += step;
     if (current >= count) { current = count; clearInterval(interval); }
