@@ -497,6 +497,11 @@ h1.logo, .logo {
 .day-cell.today {
   box-shadow: inset 0 0 0 2px var(--neon-yellow);
 }
+.day-cell.past-day {
+  opacity: 0.3;
+  cursor: not-allowed;
+  pointer-events: none;
+}
 .day-cell[title] { cursor: help; }
 
 /* tooltip */
@@ -1400,7 +1405,12 @@ let state = {
 function getMinDate(year) {
   const now = new Date();
   if (year === now.getFullYear()) {
-    return new Date(now.getFullYear(), now.getMonth(), 1);
+    // Today at midnight — never place RTT in the past
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  }
+  if (year < now.getFullYear()) {
+    // Past year — block everything
+    return new Date(year, 11, 32);
   }
   return new Date(year, 0, 1);
 }
@@ -1792,6 +1802,8 @@ function renderCalendar() {
       const isVac = vacDays.has(dk);
       const isCollegue = state.colleagueDays.has(dk);
 
+      const isPast = date < getMinDate(state.year);
+
       let cls = 'day-cell';
       if (we) cls += ' weekend';
       if (isFerie) cls += ' ferie';
@@ -1800,6 +1812,7 @@ function renderCalendar() {
       if (isVac && !isRtt && !isFerie) cls += ' vacances';
       if (isToday) cls += ' today';
       if (isCollegue) cls += ' collegue-day';
+      if (isPast && !we && !isFerie) cls += ' past-day';
 
       let tip = '';
       if (isFerie) tip = `<span class="tip">${holidayMap[dk]}</span>`;
@@ -1807,7 +1820,7 @@ function renderCalendar() {
       else if (isCollegue) tip = `<span class="tip">Coll\u00e8gue absent</span>`;
       else if (isVac && !we) tip = `<span class="tip">Vacances scolaires</span>`;
 
-      const tabAttr = (we || isFerie) ? '' : ' tabindex="0" role="button"';
+      const tabAttr = (we || isFerie || isPast) ? '' : ' tabindex="0" role="button"';
       html += `<div class="${cls}" data-date="${dk}" onclick="toggleDay('${dk}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleDay('${dk}')}"${tabAttr}>${d}${tip}</div>`;
     }
 
@@ -1821,6 +1834,7 @@ function toggleDay(dk) {
   const parts = dk.split('-');
   const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
   if (isWeekend(date)) return;
+  if (date < getMinDate(state.year)) return;
   const holidays = getPublicHolidays(state.year, state.region);
   if (holidays.some(h => dateKey(h.date) === dk)) return;
 
@@ -2463,13 +2477,13 @@ function importDates(type) {
     if (isNaN(date.getTime()) || date.getFullYear() !== state.year) continue;
 
     const dk = dateKey(date);
-    if (!isWeekend(date) && !holidayKeys.has(dk)) {
+    if (!isWeekend(date) && !holidayKeys.has(dk) && date >= getMinDate(state.year)) {
       parsed.push(dk);
     }
   }
 
   if (parsed.length === 0) {
-    document.getElementById('importResult').textContent = 'Aucune date valide trouv\u00e9e';
+    document.getElementById('importResult').textContent = 'Aucune date valide trouv\u00e9e (dates pass\u00e9es ignor\u00e9es)';
     return;
   }
 
