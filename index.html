@@ -1046,6 +1046,7 @@ footer a:hover { text-decoration: underline; }
       <label for="regionSelect">R&eacute;gion</label>
       <select id="regionSelect">
         <option value="metropole">M&eacute;tropole</option>
+        <option value="corse">Corse</option>
         <option value="alsace">Alsace-Moselle</option>
         <option value="guadeloupe">Guadeloupe</option>
         <option value="martinique">Martinique</option>
@@ -1061,6 +1062,7 @@ footer a:hover { text-decoration: underline; }
         <option value="A">Zone A</option>
         <option value="B">Zone B</option>
         <option value="C">Zone C</option>
+        <option value="Corse">Corse</option>
       </select>
     </div>
   </div>
@@ -1413,6 +1415,11 @@ const SCHOOL_VACATIONS = {
       ['2026-02-21', '2026-03-09'],
       ['2026-04-18', '2026-05-04'],
     ],
+    Corse: [
+      ['2026-02-14', '2026-03-02'],
+      ['2026-04-11', '2026-04-27'],
+      ['2026-05-13', '2026-05-18'],
+    ],
   },
   '2026-2027': {
     all: [
@@ -1487,7 +1494,7 @@ function isValidDateKey(dk) {
   return /^\d{4}-\d{2}-\d{2}$/.test(dk);
 }
 
-const VALID_REGIONS = ['metropole','alsace','guadeloupe','martinique','guyane','reunion','mayotte'];
+const VALID_REGIONS = ['metropole','corse','alsace','guadeloupe','martinique','guyane','reunion','mayotte'];
 
 // ============================================================
 // STATE
@@ -2790,6 +2797,10 @@ function init() {
 
   document.getElementById('regionSelect').addEventListener('change', (e) => {
     state.region = e.target.value;
+    if (state.region === 'corse') {
+      state.zone = 'Corse';
+      document.getElementById('zoneSelect').value = 'Corse';
+    }
     state.rttDays.clear();
     applyStrategy(state.strategy);
   });
