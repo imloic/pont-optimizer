@@ -1879,9 +1879,12 @@ function renderCalendar() {
   const currentMonth = now.getMonth();
   const currentYear = now.getFullYear();
 
+  const minDate = getMinDate(state.year);
+
   for (let m = 0; m < 12; m++) {
-    // Skip past months for current year
-    if (state.year === currentYear && m < currentMonth) continue;
+    // Skip months where all days are before the minimum date
+    const lastDayOfMonth = new Date(state.year, m + 1, 0);
+    if (lastDayOfMonth < minDate) continue;
 
     const card = document.createElement('div');
     card.className = 'month-card bevel';
