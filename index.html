@@ -1194,11 +1194,19 @@ footer a:hover { text-decoration: underline; }
     <div class="badge-grid" id="badgeGrid"></div>
   </div>
 
-  <!-- PERSONAL RTT COUNTER -->
+  <!-- COMMUNITY + PERSONAL COUNTER -->
   <div class="bevel" style="text-align:center;padding:20px;margin:0 16px 16px;display:none" id="counterWrapper">
-    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin-bottom:8px">[*] VOS STATS</div>
-    <div style="font-family:'Press Start 2P',monospace;font-size:24px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">0</div>
-    <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);margin-top:6px">RTT optimis&eacute;s depuis votre premi&egrave;re visite</div>
+    <div style="font-family:'Press Start 2P',monospace;font-size:10px;color:var(--neon-cyan);margin-bottom:12px">[*] COMPTEUR COMMUNAUTAIRE</div>
+    <div style="display:flex;justify-content:center;gap:32px;flex-wrap:wrap">
+      <div>
+        <div style="font-family:'Press Start 2P',monospace;font-size:22px;color:var(--neon-green);text-shadow:0 0 10px rgba(57,255,20,0.4)" id="communityCounter">...</div>
+        <div style="font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:4px">visiteurs ont optimis&eacute;</div>
+      </div>
+      <div id="personalCounterBlock" style="display:none">
+        <div style="font-family:'Press Start 2P',monospace;font-size:22px;color:var(--neon-pink);text-shadow:0 0 10px rgba(255,110,199,0.4)" id="personalCounter">0</div>
+        <div style="font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:4px">vos RTT optimis&eacute;s</div>
+      </div>
+    </div>
   </div>
 
   <!-- FAQ -->
@@ -2865,23 +2873,48 @@ function renderFeriesGuide() {
 // COMMUNITY COUNTER
 // ============================================================
 function initCommunityCounter() {
-  updateCommunityCounter();
+  updatePersonalCounter();
+  fetchCommunityCounter();
+}
+
+function updatePersonalCounter() {
+  const el = document.getElementById('personalCounter');
+  const block = document.getElementById('personalCounterBlock');
+  if (!el || !block) return;
+  const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
+  if (count > 0) {
+    block.style.display = '';
+    el.textContent = count.toLocaleString('fr-FR');
+  }
+}
+
+function fetchCommunityCounter() {
+  const wrapper = document.getElementById('counterWrapper');
+  const el = document.getElementById('communityCounter');
+  if (!el || !wrapper) return;
+
+  const url = 'https://stats.imloic.cloud/index.php?module=API&method=VisitsSummary.getVisits&idSite=7&period=range&date=2026-03-05,today&format=json';
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      const visits = data && data.value ? data.value : 0;
+      if (visits > 0 || parseInt(localStorage.getItem('po3k_rtt_total') || '0') > 0) {
+        wrapper.style.display = '';
+        el.textContent = visits > 0 ? visits.toLocaleString('fr-FR') : '...';
+      }
+    })
+    .catch(() => {
+      // Fallback: show personal counter only if available
+      const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
+      if (count > 0) {
+        wrapper.style.display = '';
+        el.textContent = '-';
+      }
+    });
 }
 
 function updateCommunityCounter() {
-  const el = document.getElementById('communityCounter');
-  const wrapper = document.getElementById('counterWrapper');
-  if (!el || !wrapper) return;
-
-  const count = parseInt(localStorage.getItem('po3k_rtt_total') || '0');
-
-  if (count === 0) {
-    wrapper.style.display = 'none';
-    return;
-  }
-
-  wrapper.style.display = '';
-  el.textContent = count.toLocaleString('fr-FR');
+  updatePersonalCounter();
 }
 
 // ============================================================
