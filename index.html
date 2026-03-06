@@ -264,7 +264,7 @@ h1.logo, .logo {
   justify-content: center;
   gap: 16px;
   padding: 16px;
-  margin: 16px 0;
+  margin: 0 16px 16px;
   text-align: center;
   flex-wrap: wrap;
 }
@@ -305,7 +305,7 @@ h1.logo, .logo {
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 12px;
   padding: 16px;
-  margin-bottom: 16px;
+  margin: 0 16px 16px;
 }
 .control-group label {
   display: block;
@@ -343,8 +343,8 @@ h1.logo, .logo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 8px;
-  padding: 0 16px;
-  margin-bottom: 16px;
+  padding: 0;
+  margin: 0 16px 16px;
 }
 .strat-btn {
   padding: 12px 8px;
@@ -2538,9 +2538,11 @@ function loadFromUrl() {
 function resetAll() {
   state.rttDays.clear();
   state.colleagueDays.clear();
-  state.strategy = 'rat';
+  state.strategy = 'custom';
+  document.querySelectorAll('.strat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btnOptimize').style.display = '';
+  history.replaceState(null, '', window.location.pathname);
   render();
-  applyStrategy('rat');
   showToast('Reset effectu\u00e9 !');
 }
 
