@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RTT et Ponts 2026-2036 : Optimisez vos jours de cong&eacute;s | Pont Optimizer 3000</title>
-<meta name="description" content="Calculez les meilleurs ponts et jours f&eacute;ri&eacute;s pour poser vos RTT en 2026, 2027, 2028. 5 strat&eacute;gies d'optimisation, mode &eacute;quipe, export iCal, vacances scolaires. Gratuit et sans inscription.">
+<title>Pont Optimizer 3000 &mdash; Optimisez vos RTT et ponts 2026</title>
+<meta name="description" content="Calculez les meilleurs ponts et optimisez vos RTT en 2026. 5 strat&eacute;gies, mode &eacute;quipe, export iCal. 100% gratuit, sans inscription.">
 <link rel="canonical" href="https://rtt.cool/">
-<meta property="og:title" content="RTT et Ponts 2026-2036 : Optimisez vos jours de cong&eacute;s">
+<meta property="og:title" content="Pont Optimizer 3000 &mdash; Optimisez vos RTT et ponts 2026">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://rtt.cool/">
-<meta property="og:description" content="Calculez les meilleurs ponts pour poser vos RTT. 5 strat&eacute;gies, mode &eacute;quipe, export calendrier. 100% gratuit.">
+<meta property="og:description" content="Calculez les meilleurs ponts et optimisez vos RTT en 2026. 5 strat&eacute;gies, mode &eacute;quipe, export iCal. Gratuit.">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="Pont Optimizer 3000">
 <meta property="og:image" content="https://rtt.cool/og-image.png">
@@ -17,8 +17,8 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://rtt.cool/og-image.png">
-<meta name="twitter:title" content="RTT et Ponts 2026-2036 : Optimisez vos jours de cong&eacute;s">
-<meta name="twitter:description" content="Calculez les meilleurs ponts pour poser vos RTT. 5 strat&eacute;gies, mode &eacute;quipe, export calendrier. 100% gratuit.">
+<meta name="twitter:title" content="Pont Optimizer 3000 &mdash; Optimisez vos RTT et ponts 2026">
+<meta name="twitter:description" content="Calculez les meilleurs ponts et optimisez vos RTT en 2026. 5 strat&eacute;gies, mode &eacute;quipe, export iCal. Gratuit.">
 <meta property="og:image:alt" content="Pont Optimizer 3000 - Choisissez une strategie, on calcule les meilleurs jours pour poser vos RTT">
 <meta name="theme-color" content="#0a0a1a">
 <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48.png">
@@ -1023,8 +1023,15 @@ footer a:hover { text-decoration: underline; }
 <main class="container">
 
   <header>
-    <h1 class="logo">PONT OPTIMIZER<span class="v">3000</span></h1>
+    <h1 class="logo">PONT OPTIMIZER<span class="v">3000</span><span class="sr-only"> &mdash; Optimisez vos RTT et ponts</span></h1>
     <p class="tagline">Choisissez une strat&eacute;gie, on calcule les meilleurs jours pour poser vos RTT</p>
+    <nav aria-label="Navigation rapide" style="text-align:center;margin:8px 0 4px">
+      <a href="#strategies" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:18px;margin:0 10px;text-decoration:none">Strat&eacute;gies</a>
+      <a href="#calendarGrid" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:18px;margin:0 10px;text-decoration:none">Calendrier</a>
+      <a href="#faq" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:18px;margin:0 10px;text-decoration:none">FAQ</a>
+      <a href="#jours-feries" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:18px;margin:0 10px;text-decoration:none">Jours f&eacute;ri&eacute;s</a>
+      <a href="#guide" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:18px;margin:0 10px;text-decoration:none">Guide RTT</a>
+    </nav>
     <noscript><p style="color:#ff4444;text-align:center;padding:16px;font-size:18px">Ce site n&eacute;cessite JavaScript pour fonctionner. Activez JavaScript dans votre navigateur.</p></noscript>
     <div class="marquee-wrap">
       <div class="marquee" id="marquee"></div>
@@ -1037,7 +1044,7 @@ footer a:hover { text-decoration: underline; }
   <!-- CONTROLS -->
   <div class="controls bevel">
     <div class="control-group">
-      <label for="yearSelect">Ann&eacute;e</label>
+      <label for="yearSelect">Annee</label>
       <select id="yearSelect"></select>
     </div>
     <div class="control-group">
@@ -1045,7 +1052,7 @@ footer a:hover { text-decoration: underline; }
       <input type="number" id="rttInput" min="0" max="30" value="9">
     </div>
     <div class="control-group">
-      <label for="regionSelect">R&eacute;gion</label>
+      <label for="regionSelect">Region</label>
       <select id="regionSelect">
         <option value="metropole">M&eacute;tropole</option>
         <option value="corse">Corse</option>
@@ -1207,7 +1214,7 @@ footer a:hover { text-decoration: underline; }
   </div>
 
   <!-- FAQ -->
-  <div class="bevel seo-section" style="padding:24px 20px;margin:0 16px 16px">
+  <div class="bevel seo-section" id="faq" style="padding:24px 20px;margin:0 16px 16px">
     <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[?] QUESTIONS FREQUENTES</h2>
 
     <details style="margin-bottom:12px">
@@ -1217,7 +1224,7 @@ footer a:hover { text-decoration: underline; }
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quels sont les meilleurs ponts en 2026 ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2026, les meilleurs ponts sont : le <strong style="color:var(--neon-yellow)">1er mai</strong> (vendredi &rarr; week-end de 3 jours gratuit), le <strong style="color:var(--neon-yellow)">8 mai</strong> (vendredi), l'<strong style="color:var(--neon-yellow)">Ascension</strong> le 14 mai (jeudi &rarr; posez le vendredi pour 4 jours), le <strong style="color:var(--neon-yellow)">14 juillet</strong> (mardi &rarr; posez le lundi pour 4 jours) et le <strong style="color:var(--neon-yellow)">11 novembre</strong> (mercredi &rarr; posez 2 jours pour 5 jours off).</p>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2026, les meilleurs ponts sont : le <b style="color:var(--neon-yellow)">1er mai</b> (vendredi &rarr; week-end de 3 jours gratuit), le <b style="color:var(--neon-yellow)">8 mai</b> (vendredi), l'<b style="color:var(--neon-yellow)">Ascension</b> le 14 mai (jeudi &rarr; posez le vendredi pour 4 jours), le <b style="color:var(--neon-yellow)">14 juillet</b> (mardi &rarr; posez le lundi pour 4 jours) et le <b style="color:var(--neon-yellow)">11 novembre</b> (mercredi &rarr; posez 2 jours pour 5 jours off).</p>
     </details>
 
     <details style="margin-bottom:12px">
@@ -1227,17 +1234,17 @@ footer a:hover { text-decoration: underline; }
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quels sont les meilleurs ponts en 2027 ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2027, les meilleurs ponts sont : le <strong style="color:var(--neon-yellow)">1er janvier</strong> (vendredi &rarr; 3 jours gratuits), le <strong style="color:var(--neon-yellow)">1er mai</strong> (samedi, perdu), l'<strong style="color:var(--neon-yellow)">Ascension</strong> le 6 mai (jeudi &rarr; posez vendredi = 4 jours), le <strong style="color:var(--neon-yellow)">14 juillet</strong> (mercredi &rarr; posez 2 jours = 5 jours off), le <strong style="color:var(--neon-yellow)">1er novembre</strong> (lundi &rarr; 3 jours gratuits) et le <strong style="color:var(--neon-yellow)">11 novembre</strong> (jeudi &rarr; posez vendredi = 4 jours). Deux ponts gratuits le m&ecirc;me mois en novembre !</p>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2027, les meilleurs ponts sont : le <b style="color:var(--neon-yellow)">1er janvier</b> (vendredi &rarr; 3 jours gratuits), le <b style="color:var(--neon-yellow)">1er mai</b> (samedi, perdu), l'<b style="color:var(--neon-yellow)">Ascension</b> le 6 mai (jeudi &rarr; posez vendredi = 4 jours), le <b style="color:var(--neon-yellow)">14 juillet</b> (mercredi &rarr; posez 2 jours = 5 jours off), le <b style="color:var(--neon-yellow)">1er novembre</b> (lundi &rarr; 3 jours gratuits) et le <b style="color:var(--neon-yellow)">11 novembre</b> (jeudi &rarr; posez vendredi = 4 jours). Deux ponts gratuits le m&ecirc;me mois en novembre !</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quelle diff&eacute;rence entre RTT et cong&eacute;s pay&eacute;s (CP) ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Les <strong style="color:var(--neon-green)">RTT</strong> (R&eacute;duction du Temps de Travail) compensent les heures travaill&eacute;es au-del&agrave; de 35h/semaine. Ils varient selon votre convention (g&eacute;n&eacute;ralement 8 &agrave; 12 jours/an). Les <strong style="color:var(--neon-green)">CP</strong> (Cong&eacute;s Pay&eacute;s) sont un droit l&eacute;gal de 25 jours ouvrables/an. Les RTT sont souvent plus flexibles et id&eacute;aux pour les ponts.</p>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Les <b style="color:var(--neon-green)">RTT</b> (R&eacute;duction du Temps de Travail) compensent les heures travaill&eacute;es au-del&agrave; de 35h/semaine. Ils varient selon votre convention (g&eacute;n&eacute;ralement 8 &agrave; 12 jours/an). Les <b style="color:var(--neon-green)">CP</b> (Cong&eacute;s Pay&eacute;s) sont un droit l&eacute;gal de 25 jours ouvrables/an. Les RTT sont souvent plus flexibles et id&eacute;aux pour les ponts.</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:9px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Comment n&eacute;gocier ses RTT avec son manager ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Posez vos RTT <strong style="color:var(--neon-green)">t&ocirc;t</strong> (d&egrave;s janvier). Utilisez le <strong style="color:var(--neon-cyan)">mode &eacute;quipe</strong> de Pont Optimizer pour r&eacute;partir &eacute;quitablement les ponts entre coll&egrave;gues. Montrez votre planning optimis&eacute; &agrave; votre manager &mdash; c'est plus convaincant qu'une demande vague. Partagez le lien de vos RTT directement depuis l'outil.</p>
+      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Posez vos RTT <b style="color:var(--neon-green)">t&ocirc;t</b> (d&egrave;s janvier). Utilisez le <b style="color:var(--neon-cyan)">mode &eacute;quipe</b> de Pont Optimizer pour r&eacute;partir &eacute;quitablement les ponts entre coll&egrave;gues. Montrez votre planning optimis&eacute; &agrave; votre manager &mdash; c'est plus convaincant qu'une demande vague. Partagez le lien de vos RTT directement depuis l'outil.</p>
     </details>
 
     <details style="margin-bottom:12px">
@@ -1247,13 +1254,13 @@ footer a:hover { text-decoration: underline; }
   </div>
 
   <!-- GUIDE: JOURS FERIES -->
-  <div class="bevel seo-section" style="padding:24px 20px;margin:0 16px 16px">
+  <div class="bevel seo-section" id="jours-feries" style="padding:24px 20px;margin:0 16px 16px">
     <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[#] JOURS FERIES EN FRANCE</h2>
     <div id="feriesGuide" style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);line-height:1.5"></div>
   </div>
 
   <!-- GUIDE: ASTUCES -->
-  <div class="bevel seo-section" style="padding:24px 20px;margin:0 16px 16px">
+  <div class="bevel seo-section" id="guide" style="padding:24px 20px;margin:0 16px 16px">
     <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[!] GUIDE : OPTIMISER SES RTT</h2>
     <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);line-height:1.6">
       <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">1. Posez t&ocirc;t, posez bien</strong><br>Les meilleurs ponts partent vite. D&egrave;s janvier, planifiez votre ann&eacute;e et soumettez vos demandes. Pont Optimizer vous montre les jours les plus rentables en un clic.</p>
