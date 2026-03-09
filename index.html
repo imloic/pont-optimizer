@@ -393,7 +393,7 @@ h1.logo, .logo {
   width: 100%;
   padding: 10px 12px;
   font-family: 'VT323', monospace;
-  font-size: 20px;
+  font-size: 17px;
   color: var(--neon-green);
   background: var(--bg-input);
   border: 2px solid;
@@ -593,6 +593,11 @@ h1.logo, .logo {
   background: rgba(57,255,20,0.15);
   color: var(--neon-green);
   font-weight: bold;
+}
+.day-cell.rtt-half {
+  background: linear-gradient(135deg, rgba(57,255,20,0.18) 50%, transparent 50%);
+  color: var(--neon-green);
+  font-weight: bold;
   border-color: rgba(57,255,20,0.3);
   text-shadow: 0 0 6px rgba(57,255,20,0.5);
 }
@@ -603,6 +608,7 @@ h1.logo, .logo {
   background: var(--vacances);
 }
 .day-cell.vacances.rtt { background: rgba(57,255,20,0.15); }
+.day-cell.vacances.rtt-half { background: linear-gradient(135deg, rgba(57,255,20,0.18) 50%, transparent 50%); }
 .day-cell.vacances.ferie { background: transparent; }
 .day-cell.today {
   box-shadow: inset 0 0 0 2px var(--neon-yellow);
@@ -653,6 +659,7 @@ h1.logo, .logo {
 }
 .legend-dot.l-ferie { background: var(--neon-red); }
 .legend-dot.l-rtt { background: var(--neon-green); }
+.legend-dot.l-rtt-half { background: linear-gradient(135deg, var(--neon-green) 50%, transparent 50%); }
 .legend-dot.l-weekend { background: var(--weekend); }
 .legend-dot.l-block { background: var(--pont-block); border: 1px solid rgba(57,255,20,0.3); }
 .legend-dot.l-today { box-shadow: inset 0 0 0 2px var(--neon-yellow); background: transparent; }
@@ -674,7 +681,7 @@ h1.logo, .logo {
   margin-bottom: 6px;
   border-left: 3px solid var(--neon-pink);
   color: var(--text-main);
-  font-size: 20px;
+  font-size: 17px;
 }
 .fact strong { color: var(--neon-cyan); }
 
@@ -800,6 +807,7 @@ h1.logo, .logo {
 .tl-day.tl-weekend { background: var(--weekend); height: 12px; }
 .tl-day.tl-ferie { background: var(--neon-red); height: 52px; box-shadow: 0 0 4px rgba(255,49,49,0.4); }
 .tl-day.tl-rtt { background: var(--neon-green); height: 60px; box-shadow: 0 0 6px rgba(57,255,20,0.4); }
+.tl-day.tl-rtt-half { background: var(--neon-green); height: 36px; box-shadow: 0 0 4px rgba(57,255,20,0.3); opacity: 0.7; }
 .tl-day.tl-block { background: rgba(57,255,20,0.3); height: 44px; }
 .tl-day.tl-vacances { background: var(--neon-orange); opacity: 0.35; height: 16px; }
 .tl-day.tl-today { box-shadow: 0 0 6px var(--neon-yellow), inset 0 0 0 1px var(--neon-yellow); }
@@ -1011,7 +1019,8 @@ footer a:hover { text-decoration: underline; }
 .day-cell.collegue-day {
   box-shadow: inset 0 0 0 2px var(--neon-pink);
 }
-.day-cell.collegue-day.rtt {
+.day-cell.collegue-day.rtt,
+.day-cell.collegue-day.rtt-half {
   box-shadow: inset 0 0 0 2px var(--neon-pink);
 }
 
@@ -1060,6 +1069,7 @@ footer a:hover { text-decoration: underline; }
   .day-cell.ferie { color: red; text-shadow: none; }
   .day-cell.ferie::after { background: red; }
   .day-cell.rtt { background: #d4ffd4; color: #006600; text-shadow: none; border-color: #006600; }
+  .day-cell.rtt-half { background: linear-gradient(135deg, #d4ffd4 50%, transparent 50%); color: #006600; text-shadow: none; border-color: #006600; }
   .day-cell.weekend { color: #999; background: #f5f5f5; }
   .day-cell.in-block { background: #eeffee; }
   .day-cell.today { box-shadow: inset 0 0 0 2px orange; }
@@ -1067,6 +1077,7 @@ footer a:hover { text-decoration: underline; }
   .legend { border-top: 1px solid #ccc; padding-top: 8px; }
   .legend-dot { border: 1px solid #999; }
   .legend-dot.l-rtt { background: #006600; }
+  .legend-dot.l-rtt-half { background: linear-gradient(135deg, #006600 50%, transparent 50%); }
   .legend-dot.l-ferie { background: red; }
   .legend-dot.l-weekend { background: #ccc; }
   .legend-dot.l-block { background: #eeffee; border: 1px solid #006600; }
@@ -1076,6 +1087,10 @@ footer a:hover { text-decoration: underline; }
 </style>
 <script>
   var _paq = window._paq = window._paq || [];
+  /* CNIL-exempt config: cookieless, anonymized, no cross-site tracking */
+  _paq.push(['disableCookies']);
+  _paq.push(['setDoNotTrack', true]);
+  _paq.push(['disableBrowserFeatureDetection']);
   _paq.push(['trackPageView']);
   _paq.push(['enableLinkTracking']);
   (function() {
@@ -1097,11 +1112,11 @@ footer a:hover { text-decoration: underline; }
     <h1 class="logo">PONT OPTIMIZER<span class="v">3000</span><span class="sr-only"> &mdash; Optimisez vos RTT et ponts</span></h1>
     <p class="tagline">Choisissez une strat&eacute;gie, on calcule les meilleurs jours pour poser vos RTT</p>
     <nav aria-label="Navigation rapide" style="text-align:center;margin:8px 0 4px">
-      <a href="#strategies" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:20px;margin:0 10px;text-decoration:none">Strat&eacute;gies</a>
-      <a href="#calendarGrid" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:20px;margin:0 10px;text-decoration:none">Calendrier</a>
-      <a href="#faq" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:20px;margin:0 10px;text-decoration:none">FAQ</a>
-      <a href="#jours-feries" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:20px;margin:0 10px;text-decoration:none">Jours f&eacute;ri&eacute;s</a>
-      <a href="#guide" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:20px;margin:0 10px;text-decoration:none">Guide RTT</a>
+      <a href="#strategies" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:17px;margin:0 10px;text-decoration:none">Strat&eacute;gies</a>
+      <a href="#calendarGrid" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:17px;margin:0 10px;text-decoration:none">Calendrier</a>
+      <a href="#faq" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:17px;margin:0 10px;text-decoration:none">FAQ</a>
+      <a href="#jours-feries" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:17px;margin:0 10px;text-decoration:none">Jours f&eacute;ri&eacute;s</a>
+      <a href="#guide" style="color:var(--neon-cyan);font-family:'VT323',monospace;font-size:17px;margin:0 10px;text-decoration:none">Guide RTT</a>
     </nav>
     <noscript><p style="color:#ff4444;text-align:center;padding:16px;font-size:18px">Ce site n&eacute;cessite JavaScript pour fonctionner. Activez JavaScript dans votre navigateur.</p></noscript>
     <div class="marquee-wrap">
@@ -1240,6 +1255,7 @@ footer a:hover { text-decoration: underline; }
   <div class="legend">
     <div class="legend-item"><div class="legend-dot l-ferie"></div> F&eacute;ri&eacute;</div>
     <div class="legend-item"><div class="legend-dot l-rtt"></div> RTT pos&eacute;</div>
+    <div class="legend-item"><div class="legend-dot l-rtt-half"></div> RTT &frac12; journ&eacute;e</div>
     <div class="legend-item"><div class="legend-dot l-weekend"></div> Weekend</div>
     <div class="legend-item"><div class="legend-dot l-block"></div> Bloc vacances</div>
     <div class="legend-item"><div class="legend-dot l-today"></div> Aujourd'hui</div>
@@ -1264,6 +1280,7 @@ footer a:hover { text-decoration: underline; }
     <h2>[&gt;&gt;] VUE TIMELINE</h2>
     <div class="tl-legend">
       <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-green)"></div> RTT</div>
+      <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-green);opacity:0.7;height:6px"></div> RTT &frac12;</div>
       <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--neon-red)"></div> F&eacute;ri&eacute;</div>
       <div class="tl-legend-item"><div class="tl-legend-dot" style="background:rgba(57,255,20,0.3)"></div> Bloc</div>
       <div class="tl-legend-item"><div class="tl-legend-dot" style="background:var(--weekend)"></div> Weekend</div>
@@ -1293,50 +1310,50 @@ footer a:hover { text-decoration: underline; }
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Comment optimiser ses RTT en 2026 ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Utilisez Pont Optimizer 3000 pour calculer automatiquement les meilleurs ponts autour des jours f&eacute;ri&eacute;s. S&eacute;lectionnez votre nombre de RTT, choisissez une strat&eacute;gie (Rat pour maximiser, &Eacute;quilibre pour r&eacute;partir, &Eacute;t&eacute; pour concentrer en juillet-ao&ucirc;t, Baroudeur pour des week-ends espac&eacute;s), et l'outil calcule la combinaison optimale.</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Utilisez Pont Optimizer 3000 pour calculer automatiquement les meilleurs ponts autour des jours f&eacute;ri&eacute;s. S&eacute;lectionnez votre nombre de RTT, choisissez une strat&eacute;gie (Rat pour maximiser, &Eacute;quilibre pour r&eacute;partir, &Eacute;t&eacute; pour concentrer en juillet-ao&ucirc;t, Baroudeur pour des week-ends espac&eacute;s), et l'outil calcule la combinaison optimale.</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quels sont les meilleurs ponts en 2026 ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2026, les meilleurs ponts sont : le <b style="color:var(--neon-yellow)">1er mai</b> (vendredi &rarr; week-end de 3 jours gratuit), le <b style="color:var(--neon-yellow)">8 mai</b> (vendredi), l'<b style="color:var(--neon-yellow)">Ascension</b> le 14 mai (jeudi &rarr; posez le vendredi pour 4 jours), le <b style="color:var(--neon-yellow)">14 juillet</b> (mardi &rarr; posez le lundi pour 4 jours) et le <b style="color:var(--neon-yellow)">11 novembre</b> (mercredi &rarr; posez 2 jours pour 5 jours off).</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2026, les meilleurs ponts sont : le <b style="color:var(--neon-yellow)">1er mai</b> (vendredi &rarr; week-end de 3 jours gratuit), le <b style="color:var(--neon-yellow)">8 mai</b> (vendredi), l'<b style="color:var(--neon-yellow)">Ascension</b> le 14 mai (jeudi &rarr; posez le vendredi pour 4 jours), le <b style="color:var(--neon-yellow)">14 juillet</b> (mardi &rarr; posez le lundi pour 4 jours) et le <b style="color:var(--neon-yellow)">11 novembre</b> (mercredi &rarr; posez 2 jours pour 5 jours off).</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Combien de RTT pour maximiser ses jours off ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Avec <strong style="color:var(--neon-green)">9 RTT bien plac&eacute;s</strong> autour des jours f&eacute;ri&eacute;s, vous pouvez obtenir jusqu'&agrave; 25+ jours de cong&eacute;s. Le secret : viser les jours qui &laquo;font le pont&raquo; entre un f&eacute;ri&eacute; et un week-end. L'outil calcule le meilleur ratio jours off / RTT utilis&eacute;s automatiquement.</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Avec <strong style="color:var(--neon-green)">9 RTT bien plac&eacute;s</strong> autour des jours f&eacute;ri&eacute;s, vous pouvez obtenir jusqu'&agrave; 25+ jours de cong&eacute;s. Le secret : viser les jours qui &laquo;font le pont&raquo; entre un f&eacute;ri&eacute; et un week-end. L'outil calcule le meilleur ratio jours off / RTT utilis&eacute;s automatiquement.</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quels sont les meilleurs ponts en 2027 ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2027, les meilleurs ponts sont : le <b style="color:var(--neon-yellow)">1er janvier</b> (vendredi &rarr; 3 jours gratuits), le <b style="color:var(--neon-yellow)">1er mai</b> (samedi, perdu), l'<b style="color:var(--neon-yellow)">Ascension</b> le 6 mai (jeudi &rarr; posez vendredi = 4 jours), le <b style="color:var(--neon-yellow)">14 juillet</b> (mercredi &rarr; posez 2 jours = 5 jours off), le <b style="color:var(--neon-yellow)">1er novembre</b> (lundi &rarr; 3 jours gratuits) et le <b style="color:var(--neon-yellow)">11 novembre</b> (jeudi &rarr; posez vendredi = 4 jours). Deux ponts gratuits le m&ecirc;me mois en novembre !</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">En 2027, les meilleurs ponts sont : le <b style="color:var(--neon-yellow)">1er janvier</b> (vendredi &rarr; 3 jours gratuits), le <b style="color:var(--neon-yellow)">1er mai</b> (samedi, perdu), l'<b style="color:var(--neon-yellow)">Ascension</b> le 6 mai (jeudi &rarr; posez vendredi = 4 jours), le <b style="color:var(--neon-yellow)">14 juillet</b> (mercredi &rarr; posez 2 jours = 5 jours off), le <b style="color:var(--neon-yellow)">1er novembre</b> (lundi &rarr; 3 jours gratuits) et le <b style="color:var(--neon-yellow)">11 novembre</b> (jeudi &rarr; posez vendredi = 4 jours). Deux ponts gratuits le m&ecirc;me mois en novembre !</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Quelle diff&eacute;rence entre RTT et cong&eacute;s pay&eacute;s (CP) ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Les <b style="color:var(--neon-green)">RTT</b> (R&eacute;duction du Temps de Travail) compensent les heures travaill&eacute;es au-del&agrave; de 35h/semaine. Ils varient selon votre convention (g&eacute;n&eacute;ralement 8 &agrave; 12 jours/an). Les <b style="color:var(--neon-green)">CP</b> (Cong&eacute;s Pay&eacute;s) sont un droit l&eacute;gal de 25 jours ouvrables/an. Les RTT sont souvent plus flexibles et id&eacute;aux pour les ponts.</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Les <b style="color:var(--neon-green)">RTT</b> (R&eacute;duction du Temps de Travail) compensent les heures travaill&eacute;es au-del&agrave; de 35h/semaine. Ils varient selon votre convention (g&eacute;n&eacute;ralement 8 &agrave; 12 jours/an). Les <b style="color:var(--neon-green)">CP</b> (Cong&eacute;s Pay&eacute;s) sont un droit l&eacute;gal de 25 jours ouvrables/an. Les RTT sont souvent plus flexibles et id&eacute;aux pour les ponts.</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Comment n&eacute;gocier ses RTT avec son manager ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Posez vos RTT <b style="color:var(--neon-green)">t&ocirc;t</b> (d&egrave;s janvier). Utilisez le <b style="color:var(--neon-cyan)">mode &eacute;quipe</b> de Pont Optimizer pour r&eacute;partir &eacute;quitablement les ponts entre coll&egrave;gues. Montrez votre planning optimis&eacute; &agrave; votre manager &mdash; c'est plus convaincant qu'une demande vague. Partagez le lien de vos RTT directement depuis l'outil.</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4">Posez vos RTT <b style="color:var(--neon-green)">t&ocirc;t</b> (d&egrave;s janvier). Utilisez le <b style="color:var(--neon-cyan)">mode &eacute;quipe</b> de Pont Optimizer pour r&eacute;partir &eacute;quitablement les ponts entre coll&egrave;gues. Montrez votre planning optimis&eacute; &agrave; votre manager &mdash; c'est plus convaincant qu'une demande vague. Partagez le lien de vos RTT directement depuis l'outil.</p>
     </details>
 
     <details style="margin-bottom:12px">
       <summary style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);cursor:pointer;padding:8px 0">Mes donn&eacute;es sont-elles stock&eacute;es quelque part ?</summary>
-      <p style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4"><strong style="color:var(--neon-green)">Non.</strong> Pont Optimizer 3000 fonctionne enti&egrave;rement dans votre navigateur. Aucun compte, aucune inscription, aucune base de donn&eacute;es. Vos choix sont encod&eacute;s dans l'URL pour le partage &mdash; si vous fermez l'onglet sans sauvegarder le lien, tout est perdu.</p>
+      <p style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);padding:8px 0 4px;line-height:1.4"><strong style="color:var(--neon-green)">Non.</strong> Pont Optimizer 3000 fonctionne enti&egrave;rement dans votre navigateur. Aucun compte, aucune inscription, aucune base de donn&eacute;es. Vos choix sont encod&eacute;s dans l'URL pour le partage &mdash; si vous fermez l'onglet sans sauvegarder le lien, tout est perdu.</p>
     </details>
   </div>
 
   <!-- GUIDE: JOURS FERIES -->
   <div class="bevel seo-section" id="jours-feries" style="padding:24px 20px;margin:0 16px 16px">
     <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[#] JOURS FERIES EN FRANCE</h2>
-    <div id="feriesGuide" style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);line-height:1.5"></div>
+    <div id="feriesGuide" style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);line-height:1.5"></div>
   </div>
 
   <!-- GUIDE: ASTUCES -->
   <div class="bevel seo-section" id="guide" style="padding:24px 20px;margin:0 16px 16px">
     <h2 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-green);margin-bottom:16px">[!] GUIDE : OPTIMISER SES RTT</h2>
-    <div style="font-family:'VT323',monospace;font-size:20px;color:var(--text-dim);line-height:1.6">
+    <div style="font-family:'VT323',monospace;font-size:17px;color:var(--text-dim);line-height:1.6">
       <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">1. Posez t&ocirc;t, posez bien</strong><br>Les meilleurs ponts partent vite. D&egrave;s janvier, planifiez votre ann&eacute;e et soumettez vos demandes. Pont Optimizer vous montre les jours les plus rentables en un clic.</p>
       <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">2. Le ratio magique</strong><br>Un bon pont, c'est 1 RTT pour 3+ jours off. Posez un vendredi quand le jeudi est f&eacute;ri&eacute; (Ascension) = 4 jours off pour 1 RTT. La strat&eacute;gie &laquo;Rat&raquo; maximise ce ratio automatiquement.</p>
       <p style="margin-bottom:12px"><strong style="color:var(--neon-yellow)">3. Les m&eacute;ga-ponts</strong><br>Certaines ann&eacute;es, deux f&eacute;ri&eacute;s tombent la m&ecirc;me semaine (ex: 1er mai + 8 mai). En posant 3-4 RTT, vous pouvez obtenir 9-10 jours off d'affil&eacute;e. L'outil d&eacute;tecte ces opportunit&eacute;s automatiquement.</p>
@@ -1383,7 +1400,7 @@ footer a:hover { text-decoration: underline; }
       <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);margin:20px 0 8px">Donnees personnelles</h3>
       <p>Pont Optimizer 3000 ne collecte <strong style="color:var(--neon-green)">aucune donn&eacute;e personnelle</strong>. Aucun compte utilisateur, aucune inscription, aucun cookie publicitaire.</p>
       <p style="margin-top:8px">Tous les calculs sont effectu&eacute;s localement dans votre navigateur. Vos choix de RTT ne sont jamais envoy&eacute;s &agrave; un serveur. L'&eacute;tat de l'application est stock&eacute; uniquement dans l'URL de votre navigateur.</p>
-      <p style="margin-top:8px">Des statistiques de fr&eacute;quentation anonymes sont collect&eacute;es via Matomo (h&eacute;berg&eacute; en propre) dans le respect du RGPD, sans cookies de suivi.</p>
+      <p style="margin-top:8px">Des statistiques de fr&eacute;quentation anonymes sont collect&eacute;es via Matomo (h&eacute;berg&eacute; en propre, exempt&eacute; de consentement CNIL) : aucun cookie, aucun fingerprint, Do Not Track respect&eacute;.</p>
 
       <h3 style="font-family:'Press Start 2P',monospace;font-size:12px;color:var(--neon-cyan);margin:20px 0 8px">Limitation de responsabilite</h3>
       <p>Pont Optimizer 3000 s'efforce de fournir des informations exactes sur les jours f&eacute;ri&eacute;s et vacances scolaires, mais ne peut garantir l'exactitude, l'exhaustivit&eacute; ou l'actualit&eacute; des donn&eacute;es.</p>
@@ -1588,10 +1605,16 @@ let state = {
   rttTotal: 9,
   region: 'metropole',
   zone: '',
-  rttDays: new Set(),
+  rttDays: new Map(),  // dateKey -> 1 (full day) or 0.5 (half-day)
   strategy: 'rat',
   colleagueDays: new Set(),
 };
+
+function getRttUsed(map) {
+  let sum = 0;
+  for (const v of (map || state.rttDays).values()) sum += v;
+  return sum;
+}
 
 // ============================================================
 // BRIDGE/PONT DETECTION
@@ -1746,7 +1769,43 @@ function applyStrategy(name) {
 
   if (name === 'rat') {
     const result = optimizeRTT(state.year, state.region, budget);
-    for (const dk of result.rttDays) target.add(dk);
+    for (const dk of result.rttDays) target.set(dk, 1);
+    // Fill remaining budget with best adjacent days (Mon/Fri near RTT/holidays)
+    let ratLeft = budget - getRttUsed();
+    if (ratLeft >= 1) {
+      const holidays = getPublicHolidays(state.year, state.region);
+      const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+      const minD = getMinDate(state.year);
+      const candidates = [];
+      for (let m = 0; m < 12; m++) {
+        for (let d = 1; d <= 31; d++) {
+          const date = new Date(state.year, m, d);
+          if (date.getMonth() !== m) break;
+          if (date < minD) continue;
+          const dk = dateKey(date);
+          if (isWeekend(date) || holidayKeys.has(dk) || target.has(dk)) continue;
+          let score = 0;
+          const dow = date.getDay();
+          // Prefer Mon/Fri (extend weekends)
+          if (dow === 1 || dow === 5) score += 2;
+          // Adjacent to existing RTT or holiday = better
+          for (const off of [-1, 1]) {
+            const adj = addDays(date, off);
+            const adjDk = dateKey(adj);
+            if (target.has(adjDk) || holidayKeys.has(adjDk) || isWeekend(adj)) score += 3;
+          }
+          candidates.push({ dk, score, date });
+        }
+      }
+      candidates.sort((a, b) => b.score - a.score || a.date - b.date);
+      for (const c of candidates) {
+        if (ratLeft < 1) break;
+        if (!target.has(c.dk)) {
+          target.set(c.dk, 1);
+          ratLeft--;
+        }
+      }
+    }
   } else if (name === 'equilibre') {
     // 1 break per month, prefer Mon/Fri adjacent to holidays
     const holidays = getPublicHolidays(state.year, state.region);
@@ -1776,7 +1835,7 @@ function applyStrategy(name) {
       }
       if (candidates.length > 0) {
         candidates.sort((a, b) => b.score - a.score);
-        target.add(candidates[0].dk);
+        target.set(candidates[0].dk, 1);
         left--;
       }
     }
@@ -1797,7 +1856,7 @@ function applyStrategy(name) {
       if (bridge.rttDays.length > left) continue;
       const keys = bridge.rttDays.map(d => dateKey(d));
       if (keys.every(k => !used.has(k))) {
-        keys.forEach(k => { used.add(k); target.add(k); });
+        keys.forEach(k => { used.add(k); target.set(k, 1); });
         left -= keys.length;
       }
     }
@@ -1810,7 +1869,7 @@ function applyStrategy(name) {
         if (date < minD) continue;
         const dk = dateKey(date);
         if (!isWeekend(date) && !holidayKeys.has(dk) && !used.has(dk)) {
-          target.add(dk);
+          target.set(dk, 1);
           used.add(dk);
           left--;
         }
@@ -1849,15 +1908,40 @@ function applyStrategy(name) {
       if (left <= 0) break;
       // Check 14-day minimum spacing from all picked days
       if (picked.some(p => Math.abs(c.date - p) < 14 * 86400000)) continue;
-      target.add(dateKey(c.date));
+      target.set(dateKey(c.date), 1);
       picked.push(c.date);
       left--;
     }
   }
 
+  // If there's a 0.5 RTT leftover, place it on the best adjacent day
+  const leftover = budget - getRttUsed();
+  if (leftover >= 0.5 && leftover < 1) {
+    const holidays = getPublicHolidays(state.year, state.region);
+    const holidayKeys = new Set(holidays.map(h => dateKey(h.date)));
+    const minD = getMinDate(state.year);
+    let bestDk = null;
+    // Prefer a day adjacent to existing RTT (extends a bridge)
+    for (const dk of state.rttDays.keys()) {
+      const parts = dk.split('-');
+      const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+      for (const offset of [-1, 1]) {
+        const adj = addDays(d, offset);
+        if (adj < minD) continue;
+        const adjDk = dateKey(adj);
+        if (!isWeekend(adj) && !holidayKeys.has(adjDk) && !state.rttDays.has(adjDk)) {
+          bestDk = adjDk;
+          break;
+        }
+      }
+      if (bestDk) break;
+    }
+    if (bestDk) state.rttDays.set(bestDk, 0.5);
+  }
+
   // Track strategy usage in Matomo
   if (state.rttDays.size > 0 && typeof _paq !== 'undefined') {
-    _paq.push(['trackEvent', 'Strategy', name, 'RTT', state.rttDays.size]);
+    _paq.push(['trackEvent', 'Strategy', name, 'RTT', getRttUsed()]);
   }
 
   render();
@@ -1865,21 +1949,21 @@ function applyStrategy(name) {
 
 function optimizeAuto() {
   // Keep manually placed RTT days, optimize the remaining budget
-  const manualDays = new Set(state.rttDays);
-  const rttLeft = state.rttTotal - manualDays.size;
+  const manualCount = state.rttDays.size;
+  const rttLeft = state.rttTotal - getRttUsed();
   if (rttLeft <= 0) {
     showToast('Tous vos RTT sont d\u00e9j\u00e0 pos\u00e9s !');
     return;
   }
 
   const bridges = findBridgeOpportunities(state.year, state.region);
-  const used = new Set(manualDays);
+  const used = new Map(state.rttDays);
 
   for (const bridge of bridges) {
-    if (bridge.rttDays.length <= (state.rttTotal - used.size)) {
+    if (bridge.rttDays.length <= (state.rttTotal - getRttUsed(used))) {
       const keys = bridge.rttDays.map(d => dateKey(d));
       if (keys.every(k => !used.has(k))) {
-        keys.forEach(k => used.add(k));
+        keys.forEach(k => used.set(k, 1));
       }
     }
   }
@@ -1888,7 +1972,7 @@ function optimizeAuto() {
   state.strategy = 'custom';
   document.querySelectorAll('.strat-btn').forEach(b => b.classList.toggle('active', b.dataset.strat === 'custom'));
   render();
-  showToast(`${used.size - manualDays.size} RTT ajout\u00e9s automatiquement`);
+  showToast(`${used.size - manualCount} RTT ajout\u00e9s automatiquement`);
 }
 
 // ============================================================
@@ -1911,7 +1995,7 @@ function calculateScore() {
   }
 
   const blockDays = new Set();
-  for (const dk of state.rttDays) {
+  for (const dk of state.rttDays.keys()) {
     const parts = dk.split('-');
     let date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
 
@@ -1922,7 +2006,7 @@ function calculateScore() {
   }
 
   const totalDaysOff = blockDays.size;
-  const rttUsed = state.rttDays.size;
+  const rttUsed = getRttUsed();
   const ratio = rttUsed > 0 ? (totalDaysOff / rttUsed).toFixed(1) : 0;
 
   return { rttUsed, totalDaysOff, ratio, blockDays };
@@ -2001,8 +2085,11 @@ function renderCalendar() {
       const dk = dateKey(date);
       const we = isWeekend(date);
       const isFerie = !!holidayMap[dk];
-      const isRtt = state.rttDays.has(dk);
-      const isBlock = blockDays.has(dk) && !isRtt && !isFerie && !we;
+      const rttVal = state.rttDays.get(dk);
+      const isRtt = rttVal === 1;
+      const isRttHalf = rttVal === 0.5;
+      const isAnyRtt = isRtt || isRttHalf;
+      const isBlock = blockDays.has(dk) && !isAnyRtt && !isFerie && !we;
       const isToday = dk === today;
       const isVac = vacDays.has(dk);
       const isCollegue = state.colleagueDays.has(dk);
@@ -2013,8 +2100,9 @@ function renderCalendar() {
       if (we) cls += ' weekend';
       if (isFerie) cls += ' ferie';
       if (isRtt) cls += ' rtt';
+      if (isRttHalf) cls += ' rtt-half';
       if (isBlock) cls += ' in-block';
-      if (isVac && !isRtt && !isFerie) cls += ' vacances';
+      if (isVac && !isAnyRtt && !isFerie) cls += ' vacances';
       if (isToday) cls += ' today';
       if (isCollegue) cls += ' collegue-day';
       if (isPast && !we && !isFerie) cls += ' past-day';
@@ -2022,6 +2110,7 @@ function renderCalendar() {
       let tip = '';
       if (isFerie) tip = `<span class="tip">${holidayMap[dk]}</span>`;
       else if (isRtt) tip = `<span class="tip">RTT pos\u00e9</span>`;
+      else if (isRttHalf) tip = `<span class="tip">RTT \u00bd journ\u00e9e</span>`;
       else if (isCollegue) tip = `<span class="tip">Coll\u00e8gue absent</span>`;
       else if (isVac && !we) tip = `<span class="tip">Vacances scolaires</span>`;
 
@@ -2043,11 +2132,22 @@ function toggleDay(dk) {
   const holidays = getPublicHolidays(state.year, state.region);
   if (holidays.some(h => dateKey(h.date) === dk)) return;
 
-  if (state.rttDays.has(dk)) {
+  const current = state.rttDays.get(dk);
+  if (current === 1) {
+    // Full day → half-day
+    state.rttDays.set(dk, 0.5);
+  } else if (current === 0.5) {
+    // Half-day → remove
     state.rttDays.delete(dk);
   } else {
-    if (state.rttDays.size >= Math.floor(state.rttTotal)) { showToast('Plus de RTT disponibles !'); return; }
-    state.rttDays.add(dk);
+    // Nothing → full day
+    if (getRttUsed() + 1 > state.rttTotal) {
+      // Try half-day if budget allows
+      if (getRttUsed() + 0.5 > state.rttTotal) { showToast('Plus de RTT disponibles !'); return; }
+      state.rttDays.set(dk, 0.5);
+    } else {
+      state.rttDays.set(dk, 1);
+    }
   }
 
   state.strategy = 'custom';
@@ -2282,25 +2382,30 @@ function renderTimeline() {
       const dk = dateKey(date);
       const we = isWeekend(date);
       const isFerie = !!holidayMap[dk];
-      const isRtt = state.rttDays.has(dk);
-      const isBlock = blockDays.has(dk) && !isRtt && !isFerie && !we;
-      const isVac = vacDays.has(dk) && !isRtt && !isFerie;
+      const tlRttVal = state.rttDays.get(dk);
+      const isRtt = tlRttVal === 1;
+      const isRttHalf = tlRttVal === 0.5;
+      const isAnyRtt = isRtt || isRttHalf;
+      const isBlock = blockDays.has(dk) && !isAnyRtt && !isFerie && !we;
+      const isVac = vacDays.has(dk) && !isAnyRtt && !isFerie;
       const isToday = dk === today;
       const isCollegue = state.colleagueDays.has(dk);
 
       const bar = document.createElement('div');
       bar.className = 'tl-day';
       if (isRtt) bar.className += ' tl-rtt';
+      else if (isRttHalf) bar.className += ' tl-rtt-half';
       else if (isFerie) bar.className += ' tl-ferie';
       else if (isBlock) bar.className += ' tl-block';
       else if (we) bar.className += ' tl-weekend';
       else if (isVac) bar.className += ' tl-vacances';
       if (isToday) bar.className += ' tl-today';
-      if (isCollegue && !isRtt) bar.style.boxShadow = '0 0 4px var(--neon-pink), inset 0 0 0 1px var(--neon-pink)';
+      if (isCollegue && !isAnyRtt) bar.style.boxShadow = '0 0 4px var(--neon-pink), inset 0 0 0 1px var(--neon-pink)';
 
       let tipText = `${d}/${m+1}`;
       if (isFerie) tipText += ` - ${holidayMap[dk]}`;
       else if (isRtt) tipText += ' - RTT';
+      else if (isRttHalf) tipText += ' - RTT \u00bd journ\u00e9e';
       else if (isBlock) tipText += ' - Bloc vacances';
       if (isCollegue) tipText += ' [coll\u00e8gue]';
 
@@ -2528,12 +2633,13 @@ function exportICal() {
 
   let ical = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//PontOptimizer3000//FR\r\nCALSCALE:GREGORIAN\r\n';
 
-  for (const dk of state.rttDays) {
+  for (const [dk, val] of state.rttDays) {
     const parts = dk.split('-');
     const dateStr = parts.join('');
     const nextDay = addDays(new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2])), 1);
     const endStr = `${nextDay.getFullYear()}${String(nextDay.getMonth()+1).padStart(2,'0')}${String(nextDay.getDate()).padStart(2,'0')}`;
-    ical += `BEGIN:VEVENT\r\nUID:rtt-${dateStr}@rtt.cool\r\nDTSTART;VALUE=DATE:${dateStr}\r\nDTEND;VALUE=DATE:${endStr}\r\nSUMMARY:RTT\r\nDESCRIPTION:RTT pose via Pont Optimizer 3000\r\nEND:VEVENT\r\n`;
+    const summary = val === 0.5 ? 'RTT (demi-journ\u00e9e)' : 'RTT';
+    ical += `BEGIN:VEVENT\r\nUID:rtt-${dateStr}@rtt.cool\r\nDTSTART;VALUE=DATE:${dateStr}\r\nDTEND;VALUE=DATE:${endStr}\r\nSUMMARY:${summary}\r\nDESCRIPTION:RTT pose via Pont Optimizer 3000\r\nEND:VEVENT\r\n`;
   }
 
   const holidays = getPublicHolidays(state.year, state.region);
@@ -2566,19 +2672,20 @@ function shareConges() {
   const monthNames = ['jan','fev','mar','avr','mai','jun','jul','aou','sep','oct','nov','dec'];
   const bridges = findBridgeOpportunities(state.year, state.region);
 
-  const sortedDays = [...state.rttDays].sort();
-  const lines = sortedDays.map(dk => {
+  const sortedEntries = [...state.rttDays.entries()].sort((a,b) => a[0].localeCompare(b[0]));
+  const lines = sortedEntries.map(([dk, val]) => {
     const p = dk.split('-');
     const d = new Date(parseInt(p[0]), parseInt(p[1]) - 1, parseInt(p[2]));
     const dow = dayNames[d.getDay()];
-    const label = `${dow} ${d.getDate()} ${monthNames[d.getMonth()]} ${state.year}`;
+    const halfTag = val === 0.5 ? ' (\u00bd journ\u00e9e)' : '';
+    const label = `${dow} ${d.getDate()} ${monthNames[d.getMonth()]} ${state.year}${halfTag}`;
     const bridge = bridges.find(b => b.rttDays.some(bd => dateKey(bd) === dk));
     const reason = bridge ? `> ${bridge.label}` : '';
     return `  - ${label} ${reason}`;
   });
 
   let text = `Mes RTT ${state.year}\n`;
-  text += `${state.rttDays.size} RTT pos\u00e9s > ${totalDaysOff} jours off (ratio x${ratio})\n\n`;
+  text += `${getRttUsed()} RTT pos\u00e9s > ${totalDaysOff} jours off (ratio x${ratio})\n\n`;
   text += lines.join('\n');
   text += `\n\n--\nOptimis\u00e9 avec Pont Optimizer 3000`;
 
@@ -2587,7 +2694,7 @@ function shareConges() {
   params.set('r', state.rttTotal);
   params.set('reg', state.region);
   if (state.zone) params.set('z', state.zone);
-  params.set('d', sortedDays.join(','));
+  params.set('d', sortedEntries.map(([dk,v]) => v === 0.5 ? dk+'h' : dk).join(','));
   const url = window.location.origin + window.location.pathname + '?' + params.toString();
   text += `\n${url}`;
 
@@ -2635,7 +2742,7 @@ function updateUrl() {
   params.set('reg', state.region);
   if (state.zone) params.set('z', state.zone);
   if (state.rttDays.size > 0) {
-    params.set('d', [...state.rttDays].sort().join(','));
+    params.set('d', [...state.rttDays.entries()].sort((a,b) => a[0].localeCompare(b[0])).map(([dk,v]) => v === 0.5 ? dk+'h' : dk).join(','));
   }
   history.replaceState(null, '', '?' + params.toString());
 }
@@ -2659,8 +2766,12 @@ function loadFromUrl() {
     if (['A','B','C','Corse'].includes(z)) state.zone = z;
   }
   if (params.has('d')) {
-    const days = params.get('d').split(',').filter(dk => isValidDateKey(dk));
-    state.rttDays = new Set(days);
+    state.rttDays = new Map();
+    params.get('d').split(',').forEach(raw => {
+      const isHalf = raw.endsWith('h');
+      const dk = isHalf ? raw.slice(0, -1) : raw;
+      if (isValidDateKey(dk)) state.rttDays.set(dk, isHalf ? 0.5 : 1);
+    });
     state.strategy = 'custom';
   }
 }
@@ -2743,9 +2854,9 @@ function importDates(type) {
 
   let added = 0;
   for (const dk of parsed) {
-    if (state.rttDays.size >= Math.floor(state.rttTotal)) break;
+    if (getRttUsed() + 1 > state.rttTotal) break;
     if (!state.rttDays.has(dk)) {
-      state.rttDays.add(dk);
+      state.rttDays.set(dk, 1);
       added++;
     }
   }
@@ -2778,7 +2889,7 @@ function loadCollegue() {
 
   const days = new Set();
   if (params.has('d')) {
-    params.get('d').split(',').filter(dk => isValidDateKey(dk)).forEach(dk => days.add(dk));
+    params.get('d').split(',').map(raw => raw.replace(/h$/, '')).filter(dk => isValidDateKey(dk)).forEach(dk => days.add(dk));
   }
 
   if (days.size === 0) {
@@ -2818,7 +2929,7 @@ function clearCollegue() {
 const BADGES = [
   { id: 'bridge_master', icon: '=', name: 'PONT MASTER', desc: 'Poser 5+ ponts', check: (s) => s.rttUsed >= 5 },
   { id: 'rat_supreme', icon: '$', name: 'RAT SUPREME', desc: 'Ratio x3+', check: (s) => parseFloat(s.ratio) >= 3 },
-  { id: 'full_send', icon: '>>', name: 'FULL SEND', desc: 'Utiliser tous ses RTT', check: (s) => s.rttUsed === state.rttTotal && state.rttTotal > 0 },
+  { id: 'full_send', icon: '>>', name: 'FULL SEND', desc: 'Utiliser tous ses RTT', check: (s) => Math.abs(s.rttUsed - state.rttTotal) < 0.01 && state.rttTotal > 0 },
   { id: 'megabridge', icon: '##', name: 'MEGA PONT', desc: '9+ jours off d\'affil\u00e9e', check: () => {
     const allOff = new Set();
     const holidays = getPublicHolidays(state.year, state.region);
@@ -2843,7 +2954,7 @@ const BADGES = [
     return maxStreak >= 9;
   }},
   { id: 'summer_vibes', icon: '*', name: 'SUMMER VIBES', desc: 'RTT en juillet ou ao\u00fbt', check: () => {
-    for (const dk of state.rttDays) {
+    for (const dk of state.rttDays.keys()) {
       const m = parseInt(dk.split('-')[1]);
       if (m === 7 || m === 8) return true;
     }
@@ -3004,7 +3115,7 @@ function renderFeriesGuide() {
     html += '</tr>';
   }
   html += '</table>';
-  html += `<p style="margin-top:12px;font-size:20px;opacity:0.6">Changez l'ann\u00e9e dans le s\u00e9lecteur ci-dessus pour voir les f\u00e9ri\u00e9s d'une autre ann\u00e9e.</p>`;
+  html += `<p style="margin-top:12px;font-size:17px;opacity:0.6">Changez l'ann\u00e9e dans le s\u00e9lecteur ci-dessus pour voir les f\u00e9ri\u00e9s d'une autre ann\u00e9e.</p>`;
   el.innerHTML = html;
 }
 
