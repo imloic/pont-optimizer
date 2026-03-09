@@ -29,7 +29,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" media="print" onload="this.media='all'">
 <meta name="keywords" content="RTT, ponts, jours f&eacute;ri&eacute;s, optimisation RTT, poser ses RTT, cong&eacute;s, jours de repos, pont mai, pont ascension, pont 14 juillet, pont novembre, calculateur RTT, France, Corse, 2026, 2027, 2028, vacances scolaires, jours off, week-end prolong&eacute;">
 <meta name="robots" content="index, follow">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://stats.imloic.cloud; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://stats.imloic.cloud data:; connect-src 'self' https://stats.imloic.cloud; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://stats.imloic.cloud; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://stats.imloic.cloud data:; connect-src 'self' https://stats.imloic.cloud; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'">
 <script type="application/ld+json">
 [
   {
@@ -1931,7 +1931,7 @@ function renderCalendar() {
       const isVac = vacDays.has(dk);
       const isCollegue = state.colleagueDays.has(dk);
 
-      const isPast = date < getMinDate(state.year);
+      const isPast = date < minDate;
 
       let cls = 'day-cell';
       if (we) cls += ' weekend';
@@ -2028,7 +2028,7 @@ function renderFunFacts() {
   const bridges = findBridgeOpportunities(state.year, state.region);
 
   const thursdayBridges = bridges.filter(b => b.rttDays.length === 1 && b.efficiency >= 4);
-  const megaBridges = bridges.filter(b => b.label.startsWith('Mega'));
+  const megaBridges = bridges.filter(b => b.label.startsWith('M\u00e9ga'));
 
   const { totalDaysOff, rttUsed } = getCachedScore();
 
@@ -2405,14 +2405,14 @@ function renderTeam() {
 function exportICal() {
   if (state.rttDays.size === 0) { showToast('Posez des RTT d\'abord !'); return; }
 
-  let ical = 'BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//PontOptimizer3000//FR\nCALSCALE:GREGORIAN\n';
+  let ical = 'BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//PontOptimizer3000//FR\r\nCALSCALE:GREGORIAN\r\n';
 
   for (const dk of state.rttDays) {
     const parts = dk.split('-');
     const dateStr = parts.join('');
     const nextDay = addDays(new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2])), 1);
     const endStr = `${nextDay.getFullYear()}${String(nextDay.getMonth()+1).padStart(2,'0')}${String(nextDay.getDate()).padStart(2,'0')}`;
-    ical += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${dateStr}\nDTEND;VALUE=DATE:${endStr}\nSUMMARY:RTT\nDESCRIPTION:RTT pose via Pont Optimizer 3000\nEND:VEVENT\n`;
+    ical += `BEGIN:VEVENT\r\nUID:rtt-${dateStr}@rtt.cool\r\nDTSTART;VALUE=DATE:${dateStr}\r\nDTEND;VALUE=DATE:${endStr}\r\nSUMMARY:RTT\r\nDESCRIPTION:RTT pose via Pont Optimizer 3000\r\nEND:VEVENT\r\n`;
   }
 
   const holidays = getPublicHolidays(state.year, state.region);
@@ -2422,7 +2422,7 @@ function exportICal() {
     const dateStr = parts.join('');
     const nextDay = addDays(h.date, 1);
     const endStr = `${nextDay.getFullYear()}${String(nextDay.getMonth()+1).padStart(2,'0')}${String(nextDay.getDate()).padStart(2,'0')}`;
-    ical += `BEGIN:VEVENT\nDTSTART;VALUE=DATE:${dateStr}\nDTEND;VALUE=DATE:${endStr}\nSUMMARY:${h.name} (f\u00e9ri\u00e9)\nEND:VEVENT\n`;
+    ical += `BEGIN:VEVENT\r\nUID:ferie-${dateStr}@rtt.cool\r\nDTSTART;VALUE=DATE:${dateStr}\r\nDTEND;VALUE=DATE:${endStr}\r\nSUMMARY:${h.name} (f\u00e9ri\u00e9)\r\nEND:VEVENT\r\n`;
   }
 
   ical += 'END:VCALENDAR';
@@ -2489,22 +2489,22 @@ function shareSite() {
 function shareTwitter() {
   const text = encodeURIComponent('Pont Optimizer 3000 \u2014 Maximise tes jours off avec le minimum de RTT !');
   const url = encodeURIComponent('https://rtt.cool');
-  window.open('https://x.com/intent/tweet?text=' + text + '&url=' + url, '_blank', 'width=600,height=400');
+  window.open('https://x.com/intent/tweet?text=' + text + '&url=' + url, '_blank', 'noopener,width=600,height=400');
 }
 
 function shareFacebook() {
   const url = encodeURIComponent('https://rtt.cool');
-  window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'width=600,height=400');
+  window.open('https://www.facebook.com/sharer/sharer.php?u=' + url, '_blank', 'noopener,width=600,height=400');
 }
 
 function shareLinkedin() {
   const url = encodeURIComponent('https://rtt.cool');
-  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank', 'width=600,height=400');
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url, '_blank', 'noopener,width=600,height=400');
 }
 
 function shareWhatsapp() {
   const text = encodeURIComponent('Pont Optimizer 3000 \u2014 Maximise tes jours off avec le minimum de RTT ! https://rtt.cool');
-  window.open('https://wa.me/?text=' + text, '_blank');
+  window.open('https://wa.me/?text=' + text, '_blank', 'noopener');
 }
 
 function updateUrl() {
@@ -2535,7 +2535,7 @@ function loadFromUrl() {
   }
   if (params.has('z')) {
     const z = params.get('z');
-    if (['A','B','C'].includes(z)) state.zone = z;
+    if (['A','B','C','Corse'].includes(z)) state.zone = z;
   }
   if (params.has('d')) {
     const days = params.get('d').split(',').filter(dk => isValidDateKey(dk));
@@ -2558,11 +2558,13 @@ function resetAll() {
 // ============================================================
 // TOAST
 // ============================================================
+let _toastTimer;
 function showToast(msg) {
   const el = document.getElementById('toast');
   el.textContent = msg;
   el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
 }
 
 // ============================================================
