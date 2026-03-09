@@ -1049,7 +1049,7 @@ footer a:hover { text-decoration: underline; }
     </div>
     <div class="control-group">
       <label for="rttInput">RTT disponibles</label>
-      <input type="number" id="rttInput" min="0" max="30" value="9">
+      <input type="number" id="rttInput" min="0" max="30" step="0.5" value="9">
     </div>
     <div class="control-group">
       <label for="regionSelect">Region</label>
@@ -1181,6 +1181,9 @@ footer a:hover { text-decoration: underline; }
 
   <!-- FUN FACTS -->
   <div class="fun-facts bevel" id="funFacts"></div>
+
+  <!-- FREE DAYS OFF -->
+  <div class="fun-facts bevel" id="freeDaysOff"></div>
 
   <!-- MULTI-YEAR COMPARE -->
   <div class="compare-section bevel" id="compareSection"></div>
@@ -1870,6 +1873,8 @@ function render() {
   renderCountdown();
   renderTimeline();
   renderFunFacts();
+  renderFreeDaysOff();
+  renderFeriesGuide();
   renderCompare();
   renderAchievements();
   updateUrl();
@@ -1970,7 +1975,7 @@ function toggleDay(dk) {
   if (state.rttDays.has(dk)) {
     state.rttDays.delete(dk);
   } else {
-    if (state.rttDays.size >= state.rttTotal) { showToast('Plus de RTT disponibles !'); return; }
+    if (state.rttDays.size >= Math.floor(state.rttTotal)) { showToast('Plus de RTT disponibles !'); return; }
     state.rttDays.add(dk);
   }
 
@@ -2009,10 +2014,16 @@ function renderCountdown() {
   const hours = Math.floor((diff % 86400000) / 3600000);
   const mins = Math.floor((diff % 3600000) / 60000);
 
+  const stripAccents = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const dayNames = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
+  const monthNames = ['janvier','f\u00e9vrier','mars','avril','mai','juin','juillet','ao\u00fbt','septembre','octobre','novembre','d\u00e9cembre'];
+  const dateStr = dayNames[next.date.getDay()] + ' ' + next.date.getDate() + ' ' + monthNames[next.date.getMonth()] + ' ' + next.date.getFullYear();
+
   document.getElementById('countdown').innerHTML = `
     <div>
-      <div class="label">Prochain jour f\u00e9ri\u00e9</div>
+      <div class="label">Prochain jour ferie</div>
       <div class="name">${next.name}</div>
+      <div style="font-family:'VT323',monospace;font-size:18px;color:var(--text-dim);margin-top:4px">${dateStr}</div>
     </div>
     <div class="countdown-digits">
       <div class="digit-box bevel-inset">${days}<small>JOURS</small></div>
@@ -2056,6 +2067,45 @@ function renderFunFacts() {
   facts.push(`No\u00ebl ${state.year} tombe un <strong>${xmasDow}</strong>`);
 
   el.innerHTML = `<h2>[?!] LE SAVIEZ-VOUS ?</h2>` + facts.map(f => `<div class="fact">${f}</div>`).join('');
+}
+
+function renderFreeDaysOff() {
+  const el = document.getElementById('freeDaysOff');
+  if (!el) return;
+  const holidays = getPublicHolidays(state.year, state.region);
+  const dayNames = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+  const monthNames = ['janvier','f\u00e9vrier','mars','avril','mai','juin','juillet','ao\u00fbt','septembre','octobre','novembre','d\u00e9cembre'];
+
+  const free = []; // holidays on Mon or Fri = 3-day weekend for free
+  const lost = []; // holidays on Sat or Sun = "lost"
+  for (const h of holidays) {
+    const dow = h.date.getDay();
+    if (dow === 1 || dow === 5) free.push(h);
+    if (dow === 0 || dow === 6) lost.push(h);
+  }
+
+  let html = '<h2>[★] WEEK-ENDS PROLONGES GRATUITS</h2>';
+  if (free.length === 0) {
+    html += '<div class="fact">Aucun week-end prolong\u00e9 gratuit en ' + state.year + ' \u2014 tous les f\u00e9ri\u00e9s tombent en milieu de semaine ou le week-end.</div>';
+  } else {
+    html += '<div class="fact" style="color:var(--neon-green);margin-bottom:8px"><strong>' + free.length + '</strong> week-end' + (free.length > 1 ? 's' : '') + ' de 3 jours sans poser de RTT !</div>';
+    for (const h of free) {
+      const dow = h.date.getDay();
+      const dateStr = h.date.getDate() + ' ' + monthNames[h.date.getMonth()];
+      const detail = dow === 1
+        ? 'sam + dim + lundi f\u00e9ri\u00e9 = <strong style="color:var(--neon-green)">3j off gratuits</strong>'
+        : 'vendredi f\u00e9ri\u00e9 + sam + dim = <strong style="color:var(--neon-green)">3j off gratuits</strong>';
+      html += '<div class="fact">' + h.name + ' \u2014 ' + dayNames[dow] + ' ' + dateStr + ' \u2192 ' + detail + '</div>';
+    }
+  }
+
+  if (lost.length > 0) {
+    html += '<div class="fact" style="opacity:0.6;margin-top:8px"><strong>' + lost.length + '</strong> f\u00e9ri\u00e9' + (lost.length > 1 ? 's' : '') + ' perdu' + (lost.length > 1 ? 's' : '') + ' (tombent le week-end) : ';
+    html += lost.map(h => h.name + ' (' + dayNames[h.date.getDay()] + ')').join(', ');
+    html += '</div>';
+  }
+
+  el.innerHTML = html;
 }
 
 function renderCompare() {
@@ -2526,7 +2576,7 @@ function loadFromUrl() {
     if (y >= 2000 && y <= 2100) state.year = y;
   }
   if (params.has('r')) {
-    const r = parseInt(params.get('r'));
+    const r = parseFloat(params.get('r'));
     if (r >= 0 && r <= 30) state.rttTotal = r;
   }
   if (params.has('reg')) {
@@ -2622,7 +2672,7 @@ function importDates(type) {
 
   let added = 0;
   for (const dk of parsed) {
-    if (state.rttDays.size >= state.rttTotal) break;
+    if (state.rttDays.size >= Math.floor(state.rttTotal)) break;
     if (!state.rttDays.has(dk)) {
       state.rttDays.add(dk);
       added++;
@@ -2804,7 +2854,7 @@ function init() {
   });
 
   document.getElementById('rttInput').addEventListener('change', (e) => {
-    state.rttTotal = parseInt(e.target.value) || 0;
+    state.rttTotal = parseFloat(e.target.value) || 0;
     if (state.strategy !== 'custom') applyStrategy(state.strategy);
     else render();
   });
@@ -2850,7 +2900,7 @@ function renderFeriesGuide() {
   const dayNamesLong = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'];
   const monthNamesLong = ['janvier','f\u00e9vrier','mars','avril','mai','juin','juillet','ao\u00fbt','septembre','octobre','novembre','d\u00e9cembre'];
   const year = state.year;
-  const holidays = getPublicHolidays(year, 'metropole');
+  const holidays = getPublicHolidays(year, state.region);
   holidays.sort((a, b) => a.date - b.date);
 
   let html = '<table style="width:100%;border-collapse:collapse">';
