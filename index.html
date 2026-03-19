@@ -668,6 +668,31 @@ h1.logo, .logo {
 .legend-dot.l-today { box-shadow: inset 0 0 0 2px var(--neon-yellow); background: transparent; }
 .legend-dot.l-scolaire { background: var(--vacances); border: 1px solid var(--vacances-border); }
 
+/* === VACATION DATA WARNING === */
+.vac-warning {
+  padding: 8px 16px;
+  margin: 0 16px 12px;
+  border-radius: 4px;
+  font-family: 'VT323', monospace;
+  font-size: 18px;
+  display: none;
+}
+.vac-warning-red {
+  background: rgba(255, 0, 60, 0.15);
+  border: 1px solid rgba(255, 0, 60, 0.4);
+  color: var(--neon-red);
+}
+.vac-warning-orange {
+  background: rgba(255, 149, 0, 0.15);
+  border: 1px solid rgba(255, 149, 0, 0.4);
+  color: var(--neon-orange);
+}
+.vac-warning-yellow {
+  background: rgba(255, 255, 0, 0.15);
+  border: 1px solid rgba(255, 255, 0, 0.4);
+  color: var(--neon-yellow);
+}
+
 /* === FUN FACTS === */
 .fun-facts {
   padding: 16px;
@@ -1266,6 +1291,9 @@ footer a:hover { text-decoration: underline; }
     <div class="legend-item" id="legendVacances" style="display:none"><div class="legend-dot l-scolaire"></div> Vac. scolaires</div>
   </div>
 
+  <!-- VACATION DATA WARNING -->
+  <div id="vacWarning" class="vac-warning"></div>
+
   <!-- CALENDAR -->
   <div class="calendar-grid" id="calendarGrid"></div>
 
@@ -1542,8 +1570,13 @@ const SCHOOL_VACATIONS = {
       ['2027-02-06', '2027-02-22'],
       ['2027-04-03', '2027-04-19'],
     ],
+    Corse: [
+      ['2027-02-13', '2027-03-01'],
+      ['2027-04-10', '2027-04-26'],
+      ['2027-05-06', '2027-05-10'],
+    ],
   },
-  // 2027-2028: estimated (rotation BCA), to be confirmed when published
+  // 2027-2028: estimated (rotation BCA), to be confirmed when published by Ministere
   '2027-2028': {
     all: [
       ['2027-07-03', '2027-09-01'],
@@ -1562,7 +1595,21 @@ const SCHOOL_VACATIONS = {
       ['2028-02-12', '2028-02-28'],
       ['2028-04-08', '2028-04-24'],
     ],
+    // Corse 2027-2028: not published yet, estimated from Zone C rotation
+    Corse: [
+      ['2028-02-12', '2028-02-28'],
+      ['2028-04-08', '2028-04-24'],
+    ],
   },
+};
+
+// Metadata: tracks data freshness for each school year
+// status: 'confirmed' (official arrêté) | 'estimated' (rotation guess)
+// expectedConfirmBy: ISO date after which 'estimated' data is likely stale
+const SCHOOL_VACATIONS_META = {
+  '2025-2026': { status: 'confirmed' },
+  '2026-2027': { status: 'confirmed' },
+  '2027-2028': { status: 'estimated', expectedConfirmBy: '2027-01-01' },
 };
 
 function getSchoolVacationDays(year, zone) {
@@ -1583,6 +1630,47 @@ function getSchoolVacationDays(year, zone) {
     }
   }
   return vacDays;
+}
+
+// ============================================================
+// VACATION DATA FRESHNESS CHECK
+// ============================================================
+function getVacationDataStatus(year, zone) {
+  if (!zone) return 'none';
+  const sy1 = `${year-1}-${year}`;
+  const sy2 = `${year}-${year+1}`;
+  const d1 = SCHOOL_VACATIONS[sy1];
+  const d2 = SCHOOL_VACATIONS[sy2];
+
+  // Both school years missing → no data at all
+  if (!d1 && !d2) return 'missing';
+
+  // One school year entirely missing
+  if (!d1 || !d2) {
+    const present = d1 || d2;
+    // If the present one has zone data, it's partial; else missing
+    if (!present[zone] || present[zone].length === 0) return 'missing';
+    // Check if the missing one matters (does it cover months in this year?)
+    return 'partial';
+  }
+
+  // Both exist — check zone-specific data
+  const hasZone1 = d1[zone] && d1[zone].length > 0;
+  const hasZone2 = d2[zone] && d2[zone].length > 0;
+  if (!hasZone1 && !hasZone2) return 'zone-missing';
+
+  // Check estimated / stale status via metadata
+  const now = new Date();
+  for (const sy of [sy1, sy2]) {
+    const meta = SCHOOL_VACATIONS_META[sy];
+    if (!meta) continue;
+    if (meta.status === 'estimated') {
+      if (meta.expectedConfirmBy && now > new Date(meta.expectedConfirmBy)) return 'stale';
+      return 'estimated';
+    }
+  }
+
+  return 'confirmed';
 }
 
 // ============================================================
@@ -2051,6 +2139,33 @@ function renderCalendar() {
   const vacDays = getSchoolVacationDays(state.year, state.zone);
   document.getElementById('legendVacances').style.display = state.zone ? '' : 'none';
   document.getElementById('legendCollegue').style.display = state.colleagueDays.size > 0 ? '' : 'none';
+
+  // Vacation data freshness warning
+  const vacStatus = getVacationDataStatus(state.year, state.zone);
+  const vacWarn = document.getElementById('vacWarning');
+  if (vacStatus === 'missing') {
+    vacWarn.textContent = '\u26a0 Vacances scolaires non disponibles pour ' + state.year + '. Donn\u00e9es non encore publi\u00e9es par le Minist\u00e8re.';
+    vacWarn.className = 'vac-warning vac-warning-red';
+    vacWarn.style.display = '';
+  } else if (vacStatus === 'partial') {
+    vacWarn.textContent = '\u26a0 Vacances scolaires ' + state.year + ' : donn\u00e9es partielles (une ann\u00e9e scolaire manquante).';
+    vacWarn.className = 'vac-warning vac-warning-orange';
+    vacWarn.style.display = '';
+  } else if (vacStatus === 'zone-missing') {
+    vacWarn.textContent = '\u26a0 Vacances sp\u00e9cifiques \u00e0 la zone ' + state.zone + ' non disponibles pour ' + state.year + '.';
+    vacWarn.className = 'vac-warning vac-warning-orange';
+    vacWarn.style.display = '';
+  } else if (vacStatus === 'stale') {
+    vacWarn.textContent = '\u26a0 Vacances scolaires ' + state.year + ' : dates estim\u00e9es, potentiellement obsol\u00e8tes. V\u00e9rifiez sur education.gouv.fr';
+    vacWarn.className = 'vac-warning vac-warning-red';
+    vacWarn.style.display = '';
+  } else if (vacStatus === 'estimated') {
+    vacWarn.textContent = '\u26a0 Vacances scolaires ' + state.year + ' : dates estim\u00e9es, \u00e0 confirmer lors de la publication officielle.';
+    vacWarn.className = 'vac-warning vac-warning-yellow';
+    vacWarn.style.display = '';
+  } else {
+    vacWarn.style.display = 'none';
+  }
 
   const monthNames = ['Janvier','F\u00e9vrier','Mars','Avril','Mai','Juin','Juillet','Ao\u00fbt','Septembre','Octobre','Novembre','D\u00e9cembre'];
   const dayNames = ['L','M','M','J','V','S','D'];
