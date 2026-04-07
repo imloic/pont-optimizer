@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog | rtt.cool</title>
+<meta name="description" content="Articles et guides sur les ponts, jours fériés et RTT en France. Optimisez vos congés avec nos conseils pratiques.">
+<link rel="canonical" href="https://rtt.cool/blog/">
+<meta name="robots" content="index, follow">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="manifest" href="/site.webmanifest">
+<style>
+@font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/press-start-2p-latin.woff2) format('woff2');
+}
+@font-face {
+  font-family: 'VT323';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(../fonts/vt323-latin.woff2) format('woff2');
+}
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --neon-green: #39ff14;
+  --neon-pink: #ff6ec7;
+  --neon-cyan: #00fff7;
+  --neon-yellow: #fff700;
+  --bg-dark: #0a0a1a;
+  --bg-panel: #12122a;
+  --border-light: #3a3a6a;
+  --text-dim: #9999bb;
+  --text-main: #ccccee;
+  --bevel-light: #6a6a9a;
+  --bevel-dark: #08081a;
+}
+body {
+  background: var(--bg-dark);
+  color: var(--text-main);
+  font-family: 'VT323', monospace;
+  font-size: 22px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 16px;
+}
+nav.breadcrumb {
+  padding: 12px 0;
+  font-size: 18px;
+  color: var(--text-dim);
+}
+nav.breadcrumb a {
+  color: var(--neon-cyan);
+  text-decoration: none;
+}
+nav.breadcrumb a:hover { text-decoration: underline; }
+h1 {
+  font-family: 'Press Start 2P', monospace;
+  font-size: clamp(14px, 3vw, 20px);
+  font-weight: normal;
+  line-height: 1.6;
+  color: var(--neon-cyan);
+  text-shadow: 0 0 10px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+  margin: 24px 0;
+}
+.articles {
+  list-style: none;
+  padding: 0;
+}
+.articles li {
+  background: var(--bg-panel);
+  border: 2px solid;
+  border-color: var(--bevel-light) var(--bevel-dark) var(--bevel-dark) var(--bevel-light);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.articles li a {
+  color: var(--neon-green);
+  text-decoration: none;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 14px;
+  line-height: 1.8;
+}
+.articles li a:hover {
+  text-shadow: 0 0 8px var(--neon-green);
+}
+.articles li p {
+  color: var(--text-dim);
+  margin-top: 8px;
+  font-size: 20px;
+}
+footer {
+  text-align: center;
+  padding: 32px 0 24px;
+  color: var(--text-dim);
+  font-size: 18px;
+  border-top: 1px solid var(--border-light);
+  margin-top: 32px;
+}
+footer a { color: var(--text-dim); }
+footer a:hover { color: var(--neon-cyan); }
+</style>
+</head>
+<body>
+<div class="container">
+  <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">rtt.cool</a>
+    <span class="sep">›</span>
+    Blog
+  </nav>
+  <h1>GUIDES & ARTICLES</h1>
+  <ul class="articles">
+    <li>
+      <a href="/blog/ponts-2026.html">Ponts 2026 : calendrier complet des jours fériés</a>
+      <p>Tous les ponts 2026 en France, les meilleures stratégies pour poser vos RTT, spécificités Alsace-Moselle et outre-mer.</p>
+    </li>
+    <li>
+      <a href="/blog/optimiser-rtt-2026.html">Comment optimiser ses RTT en 2026</a>
+      <p>Guide pratique pour maximiser vos jours off en 2026 grâce aux ponts et jours fériés.</p>
+    </li>
+    <li>
+      <a href="/blog/calcul-rtt-2026.html">Calcul RTT 2026 : combien de jours et comment les poser</a>
+      <p>Tout comprendre sur le calcul des RTT en 2026 : forfait jours, temps de travail, et stratégies de pose.</p>
+    </li>
+    <li>
+      <a href="/blog/ponts-2027.html">Ponts 2027 : la meilleure année pour les ponts</a>
+      <p>Anticipez 2027 : découvrez pourquoi c'est une année exceptionnelle pour les ponts et comment en profiter.</p>
+    </li>
+  </ul>
+  <footer>
+    <a href="/">← Retour à l'optimiseur</a>
+  </footer>
+</div>
+</body>
+</html>
